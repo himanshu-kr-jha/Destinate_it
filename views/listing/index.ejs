@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Madhuravas</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <header>
+        <h1>Madhuravas</h1>
+        <a href="/listing/new" class="add-property-btn">Add New Property</a>
+    </header>
+    
+    <div id="list">
+        <% for(let data of lists){ %>
+            <div class="card">
+                <img src=<%= data.image %> alt="image" />
+                <a href="/listing/<%= data._id%>"><h3> <%=  data.title %></h3></a>
+                <!-- <p> <%=   data.description %></p>
+                <h6>&#8377; <%= data.price.toLocaleString("en-IN") %></h6>
+                <p><%= data.location %></p>
+                <p> <%= data.country %></p> -->
+            </div>
+        <%} %>
+    </div>
+</body>
+</html>
