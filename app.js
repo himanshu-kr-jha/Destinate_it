@@ -4,13 +4,15 @@ const mongoose = require('mongoose');
 const path=require("path");
 const Listing =require("./models/listing.js");
 const methodOverrider=require("method-override");
+const ejsMate=require("ejs-mate");
+
 app.use(methodOverrider("_method"));
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public/css")));
-app.use(express.static(path.join(__dirname, "public/js")));
+app.use(express.static(path.join(__dirname, "/public")));
+app.use(express.static(path.join(__dirname, "/public/js")));
 const MONGOURL="mongodb://127.0.0.1:27017/Madhuravas"
 main().catch(err => console.log(err));
 async function main() {
@@ -18,8 +20,12 @@ async function main() {
 
   // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
+
+app.engine("ejs",ejsMate);
+
 app.get("/",(req,res)=>{
-    res.send("Starting the major project");
+    // res.send("Starting the major project");
+    res.render("listing/home.ejs")
 });
 app.get("/listing",async (req,res)=>{
     let allListing=await Listing.find();
@@ -44,7 +50,7 @@ app.post("/listing/new", async (req, res) => {
 
     await newList.save()
         .then((result) => {
-            console.log("New listing created:", result);
+            // console.log("New listing created:", result);
             res.redirect("/listing");
         })
         .catch((err) => {
@@ -62,11 +68,13 @@ app.get("/listing/:id/edit", async (req,res)=>{
     res.render("listing/edit.ejs",{list});
 });
 
+https://lh5.googleusercontent.com/p/AF1QipNdX9zvW1mcyYhTwlJYKRpzlNFTrJ1j1fGFH79N=w203-h114-k-no&quot
+
 //update route
 app.put("/listing/:id",async (req,res)=>{
     let {id}=req.params;
     await Listing.findByIdAndUpdate({_id:id},{...req.body.listing},{new:true}).then((res)=>{
-        console.log(res);
+        // console.log(res);
     }).catch((err)=>{
         console.log(err);
     });
@@ -76,10 +84,10 @@ app.put("/listing/:id",async (req,res)=>{
 app.delete("/listing/:id",async (req,res)=>{
     let {id}=req.params;
     await Listing.findByIdAndDelete({_id:id}).then((res)=>{
-        console.log(res);
+        // console.log(res);
     });
     res.redirect("/listing");
-})
+});
 
 app.listen(8080,(req,res)=>{
     console.log("server started.");
