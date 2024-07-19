@@ -1,148 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= list.title %> </title>
-    <style>
-        body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
+<% layout("layouts/boilerplate") %>
 
-#list {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    overflow: hidden;
-    max-width: 800px;
-    width: 100%;
-}
-
-img {
-    width: 100%;
-    height: 400px;
-    object-fit: cover;
-}
-
-h3 {
-    font-size: 28px;
-    color: #333;
-    margin: 20px 20px 10px;
-}
-
-p {
-    font-size: 16px;
-    color: #666;
-    margin: 10px 20px;
-    line-height: 1.6;
-}
-
-h6 {
-    font-size: 24px;
-    color: #e67e22;
-    margin: 15px 20px;
-}
-
-p:last-of-type {
-    font-style: italic;
-    color: #888;
-}
-
-.button-container {
-            display: flex;
-            justify-content: space-between;
-            margin: 20px;
-        }
-
-        .button-container form {
-            display: inline;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .btn-update {
-            background-color: #3498db;
-            color: white;
-        }
-
-        .btn-update:hover {
-            background-color: #2980b9;
-        }
-
-        .btn-delete {
-            background-color: #e74c3c;
-            color: white;
-        }
-
-        .btn-delete:hover {
-            background-color: #c0392b;
-        }
-
-@media (max-width: 600px) {
-    body {
-        padding: 10px;
-    }
-
-    #list {
-        border-radius: 0;
-    }
-
-    img {
-        height: 300px;
-    }
-
-    h3 {
-        font-size: 24px;
-    }
-
-    p {
-        font-size: 14px;
-    }
-
-    h6 {
-        font-size: 20px;
-    }
-}
-    </style>
-</head>
-<body>
-    <div id="list">
-        <img src="<%= list.image %>" alt="image" />
-        <h3><%= list.title %></h3>
-        <p><%= list.description %></p>
-        <h6>&#8377; <%= list.price.toLocaleString("en-IN") %></h6>
-        <p><%= list.location %></p>
-        <p><%= list.country %></p>
-        
-        <div class="button-container">
-            <form action="/listing/<%= list._id %>/edit" method="GET">
-                <button class="btn btn-update">Update</button>
-            </form>
-            <form id="deleteForm" action="/listing/<%= list._id %>?_method=DELETE" method="POST">
-                <button type="button" class="btn btn-delete" onclick="confirmDelete()">Delete</button>
+    <body>
+        <div class="row mt-3 offset-2">
+            <div class="col-10 offset-1">
+                <h1>Details:</h1>
+            </div>
+            <div class="card col-8 offset-1 show-card">
+                <img class="card-img-top-list show-img" src="<%= list.image %>" alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text">
+                       <b> <%= list.title %></b> <br>
+                            <%= list.description %> <br><br>
+                                <b><span style="color: #222222;">&#8377; <%= list.price.toLocaleString("en-IN") %></span></b> <br>
+                                    <%= list.location %>,
+                                        <%= list.country %> <br>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="btns mt-3">
+            <a href="/listing/<%= list._id %>/edit" class="btn btn-dark col-1 offset-3 add-btn">Edit</a>
+            <form id="deleteForm" action="/listing/<%= list._id %>?_method=DELETE" method="POST"
+                class="d-inline">
+                <button type="button" class="btn btn-dark offset-4"
+                    onclick="confirmDelete()">Delete</button>
             </form>
         </div>
-    </div>
-    <script>
-        function confirmDelete() {
-            if (confirm("Are you sure you want to delete this listing?")) {
-                document.getElementById("deleteForm").submit();
+
+
+        <script>
+            function confirmDelete() {
+                if (confirm("Are you sure you want to delete this listing?")) {
+                    document.getElementById("deleteForm").submit();
+                }
             }
-        }
-    </script>
-</body>
-</html>
+        </script>
+    </body>

@@ -1,28 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madhuravas</title>
-    <link rel="stylesheet" href="index.css">
-</head>
+<% layout("layouts/boilerplate") %>
 <body>
-    <header>
-        <h1>Madhuravas</h1>
-        <a href="/listing/new" class="add-property-btn">Add New Property</a>
-    </header>
-    
-    <div id="list">
-        <% for(let data of lists){ %>
-            <div class="card">
-                <img src=<%= data.image %> alt="image" />
-                <a href="/listing/<%= data._id%>"><h3> <%=  data.title %></h3></a>
-                <!-- <p> <%=   data.description %></p>
-                <h6>&#8377; <%= data.price.toLocaleString("en-IN") %></h6>
-                <p><%= data.location %></p>
-                <p> <%= data.country %></p> -->
-            </div>
-        <%} %>
+    <h1>All Listings</h1>
+    <div class="row row-cards row-cols-lg-3 row-cols-md-2 row-cols-lg-1 mb-3">
+        <% for(let data of lists) { %>
+            <a href="/listing/<%=data._id%>" style="text-decoration: none;" >
+                <div class="card-list cols" style="width: 20rem">
+                    <img class="card-img-top-list" src="<%= data.image %>" alt="Card image cap" style="height: 20rem"/>
+                    <div class="card-img-overlay-list"></div>
+                    <div class="card-body-list">
+                        <p class="card-text-list">
+                            <b><%= data.title %></b>
+                            <br>
+                            &#8377; <%= data.price.toLocaleString("en-IN") %> / night
+                        </p>
+                    </div>
+                </div>
+            </a>
+        <% } %>
     </div>
 </body>
-</html>
