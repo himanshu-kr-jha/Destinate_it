@@ -140,9 +140,9 @@ body{
     padding-left: 0;
     padding-right: 0;
     border-radius: 1rem;
+    border: none !important;
+    border-radius: 1rem;
 }
 
 .card{
-    border: none !important;
-    border-radius: 1rem;
 }
