@@ -3,13 +3,13 @@
     <body>
         <div class="row mt-3 offset-2">
             <div class="col-10 offset-1">
-                <h1>Details:</h1>
+                <h1><%= list.title %></h1>
             </div>
             <div class="card col-8 offset-1 show-card">
                 <img class="card-img-top-list show-img" src="<%= list.image %>" alt="Card image cap">
                 <div class="card-body">
                     <p class="card-text">
-                       <b> <%= list.title %></b> <br>
+                       <!-- <b> <%= list.title %></b> <br> -->
                             <%= list.description %> <br><br>
                                 <b><span style="color: #222222;">&#8377; <%= list.price.toLocaleString("en-IN") %></span></b> <br>
                                     <%= list.location %>,
