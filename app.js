@@ -1,94 +1,52 @@
-const express= require("express");
+const express = require("express");
 const app = express();
 const mongoose = require('mongoose');
-const path=require("path");
-const Listing =require("./models/listing.js");
-const methodOverrider=require("method-override");
-const ejsMate=require("ejs-mate");
+const path = require("path");
+const methodOverride = require("method-override");
+const ejsMate = require("ejs-mate");
+const wrapAsync = require("./utils/wrapAsync.js");
+const ExpressError = require("./utils/ExpressError.js");
 
-app.use(methodOverrider("_method"));
-app.set("view engine","ejs");
-app.set("views",path.join(__dirname,"views"));
-app.use(express.urlencoded({extended:true}));
+// routes
+const Listings=require("./routes/listing.js");
+const Reviews=require("./routes/reviews.js");
+
+app.use(methodOverride("_method"));
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.static(path.join(__dirname, "/public/js")));
-const MONGOURL="mongodb://127.0.0.1:27017/Madhuravas"
+app.engine("ejs", ejsMate);
+
+const MONGOURL = "mongodb://127.0.0.1:27017/Madhuravas";
 main().catch(err => console.log(err));
 async function main() {
-  await mongoose.connect(MONGOURL);
-
-  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+    await mongoose.connect(MONGOURL);
 }
 
-app.engine("ejs",ejsMate);
-
-app.get("/",(req,res)=>{
-    // res.send("Starting the major project");
-    res.render("listing/home.ejs")
-});
-app.get("/listing",async (req,res)=>{
-    let allListing=await Listing.find();
-    // console.log(lists);
-    // res.send("new listing here.");
-    res.render("listing/index.ejs",{lists:allListing});
+//home
+app.get("/", (req, res) => {
+    res.render("listing/home.ejs");
 });
 
-app.get("/listing/new",(req,res)=>{
-    res.render("listing/new.ejs");
+//listings
+app.use("/listing",Listings);
+// reviews.
+app.use("/listing/:id/reviews",Reviews);
+
+app.all("*", (req, res, next) => {
+    next(new ExpressError("Page not found!!", 404));
 });
 
-//show route
-app.get("/listing/:id",async (req,res)=>{
-    let {id}=req.params;
-    const list= await Listing.findById(id);
-    res.render("listing/show.ejs",{list});
+app.use((err, req, res, next) => {
+    let { statusCode = 500, message = 'Something went wrong !! ' } = err;
+    console.error(err.stack);
+    res.status(statusCode).render("error.ejs",{message});
+    // res.status(statusCode).send({ error: message });
 });
 
-app.post("/listing/new", async (req, res) => {
-    let newList = new Listing(req.body.listing);
-
-    await newList.save()
-        .then((result) => {
-            // console.log("New listing created:", result);
-            res.redirect("/listing");
-        })
-        .catch((err) => {
-            console.error("Error creating new listing:", err);
-            // Handle the error appropriately
-            res.status(500).send("Error creating new listing");
-        });
-});
-
-//edit route
-
-app.get("/listing/:id/edit", async (req,res)=>{
-    let {id}=req.params;
-    const list= await Listing.findById(id);
-    res.render("listing/edit.ejs",{list});
-});
-
-https://lh5.googleusercontent.com/p/AF1QipNdX9zvW1mcyYhTwlJYKRpzlNFTrJ1j1fGFH79N=w203-h114-k-no&quot
-
-//update route
-app.put("/listing/:id",async (req,res)=>{
-    let {id}=req.params;
-    await Listing.findByIdAndUpdate({_id:id},{...req.body.listing},{new:true}).then((res)=>{
-        // console.log(res);
-    }).catch((err)=>{
-        console.log(err);
-    });
-    res.redirect(`/listing/${id}`);
-});
-
-app.delete("/listing/:id",async (req,res)=>{
-    let {id}=req.params;
-    await Listing.findByIdAndDelete({_id:id}).then((res)=>{
-        // console.log(res);
-    });
-    res.redirect("/listing");
-});
-
-app.listen(8080,(req,res)=>{
+app.listen(8080, () => {
     console.log("server started.");
 });
