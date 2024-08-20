@@ -15,23 +15,27 @@
                     <img class="card-img-top img-fluid show-img" src="<%= list.image %>" alt="Card image cap">
                 </div>
                 <div class="card-body">
+                    <p class="card-text">Credits <i>@<%= list.owner.username %><i></p>
                     <p class="card-text">
-                        <%= list.description %> <br><br>
-                        <b><span style="color: #222222;">&#8377; <%= list.price.toLocaleString("en-IN") %></span></b><br>
-                        <%= list.location %>, <%= list.country %><br>
-                    </p>
+                        <%= list.description %> <br><br> </p>
+                    <p class="card-text"><b><span style="color: #222222;">&#8377; <%= list.price.toLocaleString("en-IN") %></span></b><br></p>
+                    <p class="card-text"><%= list.location %>, <%= list.country %><br></p>
                 </div>
             </div>
         </div>
-        <div class="row mt-3 justify-content-center">
-            <div class="col-md-6 text-center">
-                <a href="/listing/<%= list._id %>/edit" class="btn btn-dark col-4 mx-2">Edit</a>
-                <form id="deleteForm" action="/listing/<%= list._id %>?_method=DELETE" method="POST" class="d-inline">
-                    <button type="button" class="btn btn-danger col-4 mx-2" onclick="confirmDelete()">Delete</button>
-                </form>
+        <% if (currUser) { %>
+            <div class="row mt-3 justify-content-center">
+                <div class="col-md-6 text-center">
+                    <a href="/listing/<%= list._id %>/edit" class="btn btn-dark col-4 mx-2">Edit</a>
+                    <form id="deleteForm" action="/listing/<%= list._id %>?_method=DELETE" method="POST" class="d-inline">
+                        <button type="button" class="btn btn-danger col-4 mx-2" onclick="confirmDelete()">Delete</button>
+                    </form>
+                </div>
             </div>
-        </div>
+            <% } %>
         <hr>
+
+        <% if (currUser) { %>
         <div class="row mt-5 mb-3 justify-content-center">
             <div class="col-md-6">
                 <h4 class="text-center">Leave a review</h4>
@@ -52,7 +56,7 @@
                 </form>
             </div>
         </div>
-
+        <% } %>
         <div class="row mt-5 mb-3">
             <div class="col-12">
                 <h4>All reviews</h4>
@@ -63,7 +67,7 @@
                         <div class="col-md-6 mb-4">
                             <div class="card h-100">
                                 <div class="card-body">
-                                    <h5 class="card-title"><b><%= review.reviewerName || "John Doe" %></h5> </b> <small class="text-muted"><%= new Date(review.createdAt).toLocaleString("en-IN", { dateStyle: 'medium', timeStyle: 'short' }) %></small>
+                                    <h5 class="card-title"><b><%= review.author.username%></h5> </b> <small class="text-muted"><%= new Date(review.createdAt).toLocaleString("en-IN", { dateStyle: 'medium', timeStyle: 'short' }) %></small>
                                     <p class="card-text">
                                         Rating: 
                                         <% for (let i = 1; i <= 5; i++) { %>
