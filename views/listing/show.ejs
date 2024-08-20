@@ -40,10 +40,20 @@
             <div class="col-md-6">
                 <h4 class="text-center">Leave a review</h4>
                 <form action="/listing/<%= list._id %>/reviews" method="post" novalidate class="needs-validation">
-                    <div class="form-group">
-                        <label for="rating" class="form-label">Rating</label>
-                        <input type="range" class="form-control-range" min="1" max="5" id="rating" name="review[rating]">
-                    </div>
+                    <label for="rating" class="form-label">Rating</label>
+                    <fieldset class="starability-slot">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                      </fieldset>
                     <div class="form-group">
                         <label for="comment" class="form-label">Comments</label>
                         <textarea class="form-control" name="review[comment]" id="comment" cols="30" rows="5" required></textarea>
@@ -69,14 +79,10 @@
                                 <div class="card-body">
                                     <h5 class="card-title"><b><%= review.author.username%></h5> </b> <small class="text-muted"><%= new Date(review.createdAt).toLocaleString("en-IN", { dateStyle: 'medium', timeStyle: 'short' }) %></small>
                                     <p class="card-text">
-                                        Rating: 
-                                        <% for (let i = 1; i <= 5; i++) { %>
-                                            <% if (i <= review.rating) { %>
-                                                &#9733; <!-- Filled star -->
-                                            <% } else { %>
-                                                &#9734; <!-- Empty star -->
-                                            <% } %>
-                                        <% } %>
+                                        <h3>Rated element name</h3>
+                                        <p class="starability-result" data-rating="<%=review.rating%>">
+                    
+                                        </p>
                                     </p>
                                     <p class="card-text"><%= review.comment %></p>
                                     <form method="post" action="/listing/<%=list._id%>/reviews/<%=review._id%>/?_method=DELETE">

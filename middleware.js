@@ -2,6 +2,7 @@ const Listing=require("./models/listing.js");
 const Review=require("./models/review.js");
 const {reviewSchema}=require("./Schema.js");  
 const {listingSchema}=require("./Schema.js");  
+const ExpressError = require("./utils/ExpressError.js");
 module.exports.isLogged=(req,res,next)=>{
     if(!req.isAuthenticated()){
         req.session.redirectUrl=req.originalUrl;
@@ -43,10 +44,11 @@ module.exports.validateReview = (req, res, next) => {
     const { error } = reviewSchema.validate(req.body);
     if (error) {
         // Assuming ExpressError is properly defined or imported
-        return next(new ExpressError(400, error.details.map(detail => detail.message).join(', ')));
+        return next(new ExpressError(400, error.details.map(detail => detail.message).join(',')));
     }
     next();
 }
+
 
 module.exports.isAuthor=async (req,res,next)=>{
     let {id,reviewId}=req.params;
