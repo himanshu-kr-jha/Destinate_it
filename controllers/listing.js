@@ -27,7 +27,8 @@ module.exports.showListing=async (req, res) => {
         },
     })
     .populate("owner");
-    console.log(list);
+    console.log("Listing id:"+list._id);
+    console.log(req.user);
     if(!list){
         req.flash("error","Requested listing do not exist.");
         res.redirect("/listing");
