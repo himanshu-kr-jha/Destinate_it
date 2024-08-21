@@ -1,8 +1,12 @@
 const Listing = require("../models/listing.js");
 
+
 module.exports.postListing=async (req, res, next) => {
+    let url=req.file.path;
+    let filename=req.file.filename;
     let newList = new Listing(req.body.listing);
     newList.owner=req.user._id;
+    newList.image={url,filename};
     await newList.save();
     req.flash("success","New listing added");
     res.redirect("/listing");
@@ -27,7 +31,8 @@ module.exports.showListing=async (req, res) => {
         },
     })
     .populate("owner");
-    console.log(list);
+    console.log("Listing id:"+list._id);
+    console.log(req.user);
     if(!list){
         req.flash("error","Requested listing do not exist.");
         res.redirect("/listing");
@@ -42,14 +47,23 @@ module.exports.editListing=async (req, res) => {
         req.flash("error","Requested listing do not exist for deletion.");
         res.redirect("/listing");
     }
-    res.render("listing/edit.ejs", { list });
+    let originalImage=list.image.url;
+    originalImage.replace("/upload","/upload/h_300,w_250");
+    res.render("listing/edit.ejs", { list,originalImage });
 }
 
 module.exports.puteditListing=async (req, res) => {
     let { id } = req.params;
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing }, { new: true }).catch((err) => {
+    let listing=await Listing.findByIdAndUpdate(id, { ...req.body.listing }, { new: true }).catch((err) => {
         console.log(err);
     });
+    if(typeof req.file !="undefined"){
+        let url=req.file.path;
+        let filename=req.file.filename;
+        listing.image={url,filename};
+        await listing.save();    
+    }
+
     req.flash("success","Listing edited");
     res.redirect(`/listing/${id}`);
 }

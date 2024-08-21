@@ -5,7 +5,7 @@
         <% for(let data of lists) { %>
             <a href="/listing/<%=data._id%>" style="text-decoration: none;" >
                 <div class="card-list cols" style="width: 20rem">
-                    <img class="card-img-top-list" src="<%= data.image %>" alt="Card image cap" style="height: 20rem"/>
+                    <img class="card-img-top-list" src="<%= data.image.url %>" alt="Card image cap" style="height: 20rem"/>
                     <div class="card-img-overlay-list"></div>
                     <div class="card-body-list">
                         <p class="card-text-list">

@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <h1 class="mb-4 text-center">Add Your Place</h1>
-                <form class="newform needs-validation" novalidate action="/listing/new" method="post">
+                <form class="newform needs-validation" novalidate action="/listing/new" method="post" enctype="multipart/form-data">
                     <div class="form-group mb-3">
                         <label for="title">Title:</label>
                         <input type="text" class="form-control" name="listing[title]" id="title" placeholder="Add a catchy title&nbsp;" required>
@@ -12,14 +12,18 @@
                         <div class="invalid-feedback">Give a valid title!!</div>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="description">Description:</label>
+                        <label for="description">Description:</label>afs
                         <textarea class="form-control" name="listing[description]" id="description" required placeholder="Description about your place"></textarea>
                         <div class="valid-feedback">Well described!!</div>
                         <div class="invalid-feedback">Can't be empty</div>
                     </div>
-                    <div class="form-group mb-3">
+                    <!-- <div class="form-group mb-3">
                         <label for="image">Image URL:</label>
                         <input type="url" class="form-control" name="listing[image]" id="image" placeholder="Image URL">
+                    </div> -->
+                    <div class="form-group mb-3">
+                        <label for="image">Upload Image</label>
+                        <input type="file" class="form-control" name="listing[image]" id="image" required>
                     </div>
                     <div class="form-group mb-3">
                         <label for="price">Price:</label>

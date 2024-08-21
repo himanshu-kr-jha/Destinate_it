@@ -1,3 +1,6 @@
+if(process.env.NODE_ENV!="production"){
+    require('dotenv').config()
+}
 const express = require("express");
 const app = express();
 const mongoose = require('mongoose');
@@ -18,7 +21,7 @@ const ReviewsRouter=require("./routes/reviews.js");
 const UserRouter=require("./routes/user.js");
 
 const sessionOptions={
-    secret:"jha@2023",
+    secret:process.env.SECRET,
     resave:false,
     saveUninialized:true,
     cookie:{
@@ -42,9 +45,9 @@ async function main() {
     await mongoose.connect(MONGOURL);
 }
 
-app.get("/", (req, res) => {
-    res.render("listing/home.ejs");
-});
+// app.get("/", (req, res) => {
+//     res.render("listing/home.ejs");
+// });
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -62,15 +65,6 @@ app.use((req,res,next)=>{
     next();
 });
 
-app.get("/demouser",async(req,res)=>{
-    let fakeuser=new User({
-        email: "himanshukrjha004@gmail.com",
-        username:"himanshu"
-    });
-
-    let newuser=await User.register(fakeuser,"1234");
-    res.send(newuser);
-});
 //listings
 app.use("/listing",ListingsRouter);
 // reviews.
