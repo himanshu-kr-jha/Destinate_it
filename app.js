@@ -58,9 +58,9 @@ async function main() {
     await mongoose.connect(dburl);
 }
 
-// app.get("/", (req, res) => {
-//     res.render("listing/home.ejs");
-// });
+app.get("/", (req, res) => {
+    res.render("listing/home.ejs");
+});
 
 app.use(session(sessionOptions));
 app.use(flash());

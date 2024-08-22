@@ -1,6 +1,31 @@
-<% layout("/layouts/boilerplateHome") %>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destinate it</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" href="./pine-tree.png" type="image/png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/rating.css">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
+</head>
+
 <body>
-    <h1>Welcome to Madhuravas</h1>
-    <p>We have places, which won't regret you going.</p>
-    
+
+    <div class="container text-center mt-5">
+        <h1>Welcome to Destinate !t</h1>
+        <p class="lead">Discover unique places that you'll love to visit and enjoy.</p>
+        <p>We have carefully curated spots that you won't regret exploring.</p>
+
+        <a href="/listing" class="btn  mt-4" style="background-color: #fe424d; color: white;">Explore Now</a>
+    </div>
+
+    <%- include("../includes/footer.ejs") %>
 </body>
