@@ -9,6 +9,10 @@
         border-radius: 25px;
         padding-left: 1rem;
     }
+    .name{
+        margin-right: 1rem;
+        font-size: 1rem;
+    }
 </style>
 <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom sticky-top">
     <a class="navbar-brand" href="/listing"><i class="fa-solid fa-tents"></i></a>
@@ -26,13 +30,13 @@
               </form>
         </div>
         <div class="navbar-nav ml-auto">
-            <a class="nav-link" href="/listing/new">Pin your spot</a>
+            <a class="nav-link name" href="/listing/new">Destinate !t </a>
             <% if (!currUser) { %>
                 <a class="nav-link" href="/user/signup"><b>SignUp</b></a>
                 <a class="nav-link" href="/user/login"><b>Login</b></a>
             <% } %>
             <% if (currUser) { %>
-                <a class="nav-link" href="/user/logout"><b>Logout</b></a>
+                <a class="nav-link" href="/user/logout"><b><i class="fa-solid fa-arrow-right-from-bracket"></i></b></a>
             <% } %>
         </div>
     </div>
