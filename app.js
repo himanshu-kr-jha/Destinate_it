@@ -10,6 +10,7 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const session=require("express-session");
+const MongoStore = require('connect-mongo');
 const flash=require("connect-flash");
 const passport=require("passport");
 const localStrat=require("passport-local");
@@ -19,8 +20,20 @@ const User=require("./models/user.js");
 const ListingsRouter=require("./routes/listing.js");
 const ReviewsRouter=require("./routes/reviews.js");
 const UserRouter=require("./routes/user.js");
+const dburl=process.env.ATLAS_DB_URL;
+const store=MongoStore.create({
+    mongoUrl:dburl,
+    crypto:{
+        secret:process.env.SECRET
+    },
+    touchAfter:24*3600,
+});
 
+store.on("error",()=>{
+    console.log("Error in MONGO SESSION STORE");
+});
 const sessionOptions={
+    store,
     secret:process.env.SECRET,
     resave:false,
     saveUninialized:true,
@@ -39,10 +52,10 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.static(path.join(__dirname, "/public/js")));
 app.engine("ejs", ejsMate);
 
-const MONGOURL = "mongodb://127.0.0.1:27017/Madhuravas";
+// const MONGOURL = "mongodb://127.0.0.1:27017/Madhuravas";
 main().catch(err => console.log(err));
 async function main() {
-    await mongoose.connect(MONGOURL);
+    await mongoose.connect(dburl);
 }
 
 // app.get("/", (req, res) => {
