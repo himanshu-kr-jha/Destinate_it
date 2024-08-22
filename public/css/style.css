@@ -144,5 +144,9 @@ body{
     border-radius: 1rem;
 }
 
-.card{
+#map { 
+    margin-top: 2rem; 
+    width: 130vh; 
+    height: 40vh;
+    border-radius: 2rem;
 }
