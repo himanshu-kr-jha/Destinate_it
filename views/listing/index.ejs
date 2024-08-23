@@ -1,74 +1,67 @@
 <% layout("layouts/boilerplate") %>
-<style>
-    #filters{
-        display: flex;
-        flex-wrap: wrap;
-        margin-left: 3rem;
-    }
-    .filter{
-        text-align: center;
-        margin-top: 1.5rem;
-        margin-right: 2rem;
-        opacity: 0.6;
-    }
-    .filter:hover{
-        opacity: 1;
-        cursor: pointer;
-    }
-</style>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 <body>
     <!-- <h1>All Listings</h1> -->
-    <div id="filters">
-        <div class="filter">
-            <div><i class="fa-solid fa-fire"></i></div>
-            <p>Trending</p>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mt-4 mb-4">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarFilters" aria-controls="navbarFilters" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse justify-content-center" id="navbarFilters">
+            <div id="filters" class="d-flex flex-wrap justify-content-center">
+                <div class="filter">
+                    <div><i class="fa-solid fa-fire"></i></div>
+                    <p>Trending</p>
+                </div>
+            
+                <div class="filter">
+                    <div><i class="fa-solid fa-bed"></i></div>
+                    <p>Homes</p>
+                </div>
+            
+                <div class="filter">
+                    <div><i class="fa-solid fa-utensils"></i></div>
+                    <p>Restaurants</p>
+                </div>
+            
+                <div class="filter">
+                    <div><i class="fa-solid fa-mountain"></i></div>
+                    <p>Nature</p>
+                </div>
+            
+                <div class="filter">
+                    <div><i class="fa-solid fa-spa"></i></div>
+                    <p>Wellness</p>
+                </div>
+            
+                <div class="filter">
+                    <div><i class="fa-solid fa-bicycle"></i></div>
+                    <p>Adventure</p>
+                </div>
+            
+                <div class="filter">
+                    <div><i class="fa-solid fa-palette"></i></div>
+                    <p>Art & Culture</p>
+                </div>
+            
+                <div class="filter">
+                    <div><i class="fa-solid fa-coffee"></i></div>
+                    <p>Cafes</p>
+                </div>
+            
+                <div class="filter">
+                    <div><i class="fa-solid fa-tree"></i></div>
+                    <p>Gardens</p>
+                </div>
+            
+                <div class="filter">
+                    <div><i class="fa-solid fa-monument"></i></div>
+                    <p>Monuments</p>
+                </div>
+            </div>
         </div>
+    </nav>
     
-        <div class="filter">
-            <div><i class="fa-solid fa-bed"></i></div>
-            <p>Homes</p>
-        </div>
-    
-        <div class="filter">
-            <div><i class="fa-solid fa-utensils"></i></div>
-            <p>Restaurants</p>
-        </div>
-    
-        <div class="filter">
-            <div><i class="fa-solid fa-mountain"></i></div>
-            <p>Nature</p>
-        </div>
-    
-        <div class="filter">
-            <div><i class="fa-solid fa-spa"></i></div>
-            <p>Wellness</p>
-        </div>
-    
-        <div class="filter">
-            <div><i class="fa-solid fa-bicycle"></i></div>
-            <p>Adventure</p>
-        </div>
-    
-        <div class="filter">
-            <div><i class="fa-solid fa-palette"></i></div>
-            <p>Art & Culture</p>
-        </div>
-    
-        <div class="filter">
-            <div><i class="fa-solid fa-coffee"></i></div>
-            <p>Cafes</p>
-        </div>
-    
-        <div class="filter">
-            <div><i class="fa-solid fa-tree"></i></div>
-            <p>Parks & Gardens</p>
-        </div>
-    
-        <div class="filter">
-            <div><i class="fa-solid fa-monument"></i></div>
-            <p>Monuments</p>
-        </div>
-    </div>
     
     <div class="row row-cards row-cols-lg-3 row-cols-md-2 row-cols-lg-1 mb-3 mt-3">
         <% for(let data of lists) { %>
@@ -87,4 +80,59 @@
             </a>
         <% } %>
     </div>
+    <style>
+        #filters {
+            margin-top: 1rem;
+        }
+    
+        .filter {
+            text-align: center;
+            margin: 0.5rem;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            padding: 0 1rem; /* Space between filters */
+        }
+    
+        .filter:hover {
+            opacity: 1;
+            cursor: pointer;
+        }
+    
+        .filter p {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .navbar{
+            background-color: white !important;
+        }
+        @media (min-width: 992px) {
+            .filter {
+                flex: 1 1 calc(10% - 2rem); /* Adjusted to include padding */
+                max-width: calc(10% - 2rem);
+            }
+        }
+    
+        @media (max-width: 991.98px) and (min-width: 768px) {
+            .filter {
+                flex: 1 1 calc(20% - 2rem);
+                max-width: calc(20% - 2rem);
+            }
+        }
+    
+        @media (max-width: 767.98px) {
+            .filter {
+                flex: 1 1 calc(33.333% - 2rem);
+                max-width: calc(33.333% - 2rem);
+            }
+        }
+    
+        @media (max-width: 575.98px) {
+            .filter {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
