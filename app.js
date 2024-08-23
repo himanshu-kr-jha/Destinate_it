@@ -84,7 +84,12 @@ app.use("/listing",ListingsRouter);
 app.use("/listing/:id/reviews",ReviewsRouter);
 //user
 app.use("/user",UserRouter);
-
+app.get("/privacy",(req,res)=>{
+    res.render("listing/privacy.ejs");
+})
+app.get("/terms",(req,res)=>{
+    res.render("listing/terms.ejs");
+})
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page not found!!", 404));
 });
@@ -95,7 +100,6 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render("error.ejs",{message});
     // res.status(statusCode).send({ error: message });
 });
-
 app.listen(8080, () => {
     console.log("server started.");
 });
