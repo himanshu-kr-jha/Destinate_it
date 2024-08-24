@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Destinate it</title>
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="icon" href="./pine-tree.png" type="image/png">
+    <link rel="icon" href="/css/pine-tree.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -15,17 +15,57 @@
     <link rel="stylesheet" href="/css/rating.css">
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
+    <style>
+body, html {
+    height: 100%; /* Ensure the body and html elements fill the screen height */
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 100% of the viewport height */
+    text-align: center; /* Center the text */
+}
+
+.container h1 {
+    font-size: 4rem; /* Adjust the size to your preference */
+    font-weight: bold;
+    color: #000; /* Default color for "Welcome to" */
+    line-height: 1.2; /* Adjust line spacing */
+}
+
+.container h1 .highlight {
+    color: #fe424d; /* Highlight color for "Destinate !t" */
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .container h1 {
+        font-size: 3rem; /* Adjust the size for smaller screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .container h1 {
+        font-size: 2rem; /* Adjust the size for even smaller screens */
+    }
+}
+
+    </style>
 </head>
 
 <body>
 
-    <div class="container text-center mt-5">
-        <h1>Welcome to Destinate !t</h1>
-        <p class="lead">Discover unique places that you'll love to visit and enjoy.</p>
-        <p>We have carefully curated spots that you won't regret exploring.</p>
-
-        <a href="/listing" class="btn  mt-4" style="background-color: #fe424d; color: white;">Explore Now</a>
+    <div class="container">
+        <div>
+            <h1><span class="welcome">Welcome to</span><br><span class="highlight">Destinate !t</span></h1>
+            <p class="lead">Discover unique places that you'll love to visit and enjoy.</p>
+            <p>We have carefully curated spots that you won't regret exploring.</p>
+            <a href="/listing" class="btn mt-4" style="background-color: #fe424d; color: white;">Explore Now</a>
+        </div>
     </div>
-
+    
     <%- include("../includes/footer.ejs") %>
 </body>

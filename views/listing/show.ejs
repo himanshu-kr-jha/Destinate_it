@@ -160,9 +160,8 @@
                     <div class="review-card">
                         <div class="card h-100">
                             <div class="card-body">
-                                <h5 class="card-title"><b>@<%= review.author.username %></h5> </b> <small class="text-muted"><%= new Date(review.createdAt).toLocaleString("en-IN", { dateStyle: 'medium', timeStyle: 'short' }) %></small>
+                                <h5 class="card-title" style="color: #fe424d;"><b>@<%= review.author.username %></h5> </b> <small class="text-muted"><%= new Date(review.createdAt).toLocaleString("en-IN", { dateStyle: 'medium', timeStyle: 'short' }) %></small>
                                 <p class="card-text">
-                                    <h5><i>Rating</i></h5>
                                     <p class="starability-result" data-rating="<%=review.rating %>"></p>
                                 </p>
                                 <p class="card-text"><%= review.comment %></p>
