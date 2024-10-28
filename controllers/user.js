@@ -11,7 +11,7 @@ module.exports.signupPost=async (req, res) => {
             if(err){
                 next(err);
             }
-            req.flash("success","Welcome to Madhuravas.");
+            req.flash("success","Welcome to Destinate !t.");
             res.redirect("/listing");
         })
         // req.flash("success", "new user registered");
@@ -22,7 +22,7 @@ module.exports.signupPost=async (req, res) => {
 }
 
 module.exports.login=async (req, res) => {
-    req.flash("success","Welcome back to Madhuravas");
+    req.flash("success","Welcome back to Destinate !t");
     let redirecturl=res.locals.redirectUrl || "/listing";
     res.redirect(redirecturl);
 }
