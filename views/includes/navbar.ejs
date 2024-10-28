@@ -1,88 +1,93 @@
 <style>
     .search-btn {
-    background-color: #fe424d;
-    color: white;
-    border-radius: 25px !important;
-}
-
-.search-inp {
-    border-radius: 25px;
-    padding-left: 1rem;
-}
-
-.name {
-    margin-right: 1rem;
-    font-size: 1rem;
-}
-
-.navbar.bg-expanded {
-    background-color: white;
-    z-index: 1040; /* Ensures the navbar is above the overlay */
-}
-.navbar.bg-expanded a {
-    font-size: large;
-}
-.hide{
-    display: none;
-}
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding-top: 10px;
-    padding-bottom:50px ;
-    width: 100%;
-    height: 100%;
-    /* background: rgba(0, 0, 0, 0.5); Semi-transparent black overlay */
-    background: white;
-    z-index: 1030; /* Just below the navbar */
-    display: none; /* Initially hidden */
-}
-
-.overlay.show {
-    display: block;
-}
-
-.navbar-toggler {
-    border-color: #fe424d; /* Optional: change the color of the toggler icon */
-}
-
-.search-inp.hide {
-    display: none;
-}
-
-.search-inp.show {
-    display: inline-block;
-    margin-bottom: 1rem;
-}
-
-/* Media query for screens less than 768px */
-@media (max-width: 768px) {
-    .navbar-nav .nav-link,
-    .form-inline {
-        display: block;
-        width: 100%;
-        text-align: center;
-        margin-bottom: 10px;
+        background-color: #fe424d;
+        color: white;
+        border-radius: 25px !important;
     }
 
-    .form-inline {
-        margin-top: 10px;
-    }
-
-    .navbar-nav .nav-link {
+    .search-inp {
         border-radius: 25px;
-        padding: 10px;
-        /* background-color: #f8f9fa; */
-        background-color: white;
+        padding-left: 1rem;
     }
 
-    .navbar-nav .name,
-    .navbar-nav .search-btn {
+    .navbar .navbar-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex: 1;
+    }
+
+    .navbar-nav .name {
+        font-size: 1rem;
+    }
+
+    .navbar-expand .navbar-nav {
+        flex-direction: row;
+    }
+
+    .navbar-nav .nav-item {
+        flex: 1;
+        text-align: center;
+    }
+
+    .form-inline {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding-top: 10px;
+        padding-bottom: 50px;
         width: 100%;
+        height: 100%;
+        background: white;
+        z-index: 1030;
+        display: none;
     }
-}
 
+    .overlay.show {
+        display: block;
+    }
+
+    .navbar-toggler {
+        border-color: #fe424d;
+    }
+
+    .search-inp.hide {
+        display: none;
+    }
+
+    .search-inp.show {
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+
+    /* Media query for screens less than 768px */
+    @media (max-width: 768px) {
+        .navbar-nav {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .navbar-nav .nav-link,
+        .form-inline {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .form-inline {
+            margin-top: 10px;
+        }
+
+        .navbar-nav .name,
+        .navbar-nav .search-btn {
+            width: 100%;
+        }
+    }
 </style>
 
 <div class="overlay"></div> <!-- Overlay element -->
@@ -93,25 +98,20 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav mr-auto">
-            <a class="nav-link" href="/listing">Explore &nbsp; <i class="fa-solid fa-binoculars" style="color: #fe424d; font-size: medium;"></i></a>
-        </div>
         <div class="navbar-nav">
+            <a class="nav-link" href="/listing">Explore &nbsp; <i class="fa-solid fa-binoculars" style="color: #fe424d; font-size: medium;"></i></a>
             <form class="form-inline search-form" action="/search" method="GET">
                 <input
-                    class="form-control mr-sm-2 search-inp"
+                    class="form-control search-inp"
                     type="search"
                     name="q"
                     placeholder="Search destinations"
                     aria-label="Search"
                 />
-                <button class="btn search-btn my-2 my-sm-0" type="submit">
+                <button class="btn search-btn" type="submit">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
             </form>
-            
-        </div>
-        <div class="navbar-nav ml-auto">
             <a class="nav-link name" href="/listing/new"><b></b> &nbsp;<i class="fa-solid fa-location-dot" style="color: #fe424d; font-size: medium;">  Destinate !t</i></a>
             <% if (!currUser) { %>
                 <a class="nav-link" href="/user/signup"><b> <span class="span-link"></span> <i class="fa-solid fa-user-plus" style="color: #fe424d; font-size: medium;">  SignUp</i></b></a>
@@ -125,51 +125,47 @@
 </nav>
 
 <script>
-    // Add or remove background color class based on the collapse state
     document.addEventListener('DOMContentLoaded', function() {
-    const navbar = document.querySelector('.navbar');
-    const navbarToggler = document.querySelector('.navbar-toggler');
-    const navbarCollapse = document.getElementById('navbarNavAltMarkup');
-    const overlay = document.querySelector('.overlay');
-    const searchInp = document.querySelector('.search-inp');
-    const searchBtn = document.querySelector('.search-btn');
-    const spanLink=document.querySelector(".span-link");
-    // Handle navbar toggler click
-    navbarToggler.addEventListener('click', function() {
-        if (navbarCollapse.classList.contains('show')) {
-            navbar.classList.remove('bg-expanded');
-            navbar.classList.add('border-bottom');
-            searchInp.classList.add('hide');
-            spanLink.classList.remove("hide");
-            overlay.classList.remove('show');
-        } else {
-            navbar.classList.add('bg-expanded');
-            navbar.classList.remove('border-bottom');
-            overlay.classList.add('show');
-            spanLink.classList.remove("hide");
-            searchInp.classList.add('hide');
-        }
-    });
+        const navbar = document.querySelector('.navbar');
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        const navbarCollapse = document.getElementById('navbarNavAltMarkup');
+        const overlay = document.querySelector('.overlay');
+        const searchInp = document.querySelector('.search-inp');
+        const searchBtn = document.querySelector('.search-btn');
+        const spanLink = document.querySelector(".span-link");
 
-    // Handle search button click
-    searchBtn.addEventListener('click', function(event) {
-        if (window.innerWidth < 768 && searchInp.classList.contains('hide')) {
-            event.preventDefault(); // Prevent the form from submitting
-            searchInp.classList.remove('hide');
-            searchInp.classList.add('show');
-            searchInp.focus(); // Focus the input field
-        }
-    });
+        navbarToggler.addEventListener('click', function() {
+            if (navbarCollapse.classList.contains('show')) {
+                navbar.classList.remove('bg-expanded');
+                navbar.classList.add('border-bottom');
+                searchInp.classList.add('hide');
+                spanLink.classList.remove("hide");
+                overlay.classList.remove('show');
+            } else {
+                navbar.classList.add('bg-expanded');
+                navbar.classList.remove('border-bottom');
+                overlay.classList.add('show');
+                spanLink.classList.remove("hide");
+                searchInp.classList.add('hide');
+            }
+        });
 
-    // Ensure the overlay and background color are removed on window resize
-    window.addEventListener('resize', function() {
-        if (window.innerWidth >= 768) {
-            navbar.classList.remove('bg-expanded');
-            overlay.classList.remove('show');
-            searchInp.classList.remove('hide');
-            searchInp.classList.remove('show');
-        }
-    });
-});
+        searchBtn.addEventListener('click', function(event) {
+            if (window.innerWidth < 768 && searchInp.classList.contains('hide')) {
+                event.preventDefault();
+                searchInp.classList.remove('hide');
+                searchInp.classList.add('show');
+                searchInp.focus();
+            }
+        });
 
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768) {
+                navbar.classList.remove('bg-expanded');
+                overlay.classList.remove('show');
+                searchInp.classList.remove('hide');
+                searchInp.classList.remove('show');
+            }
+        });
+    });
 </script>
