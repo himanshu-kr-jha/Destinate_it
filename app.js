@@ -20,6 +20,10 @@ const User=require("./models/user.js");
 const ListingsRouter=require("./routes/listing.js");
 const ReviewsRouter=require("./routes/reviews.js");
 const UserRouter=require("./routes/user.js");
+const searchRouter = require('./routes/search'); // Adjust the path as necessary
+
+// Set up EJS as the template engine
+// const dburl = "mongodb://127.0.0.1:27017/Madhuravas";
 const dburl=process.env.ATLAS_DB_URL;
 const store=MongoStore.create({
     mongoUrl:dburl,
@@ -52,7 +56,6 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.static(path.join(__dirname, "/public/js")));
 app.engine("ejs", ejsMate);
 
-// const MONGOURL = "mongodb://127.0.0.1:27017/Madhuravas";
 main().catch(err => console.log(err));
 async function main() {
     await mongoose.connect(dburl);
@@ -82,6 +85,10 @@ app.use((req,res,next)=>{
 app.use("/listing",ListingsRouter);
 // reviews.
 app.use("/listing/:id/reviews",ReviewsRouter);
+
+//search
+
+// app.use("/listing/")
 //user
 app.use("/user",UserRouter);
 app.get("/privacy",(req,res)=>{
@@ -90,6 +97,10 @@ app.get("/privacy",(req,res)=>{
 app.get("/terms",(req,res)=>{
     res.render("listing/terms.ejs");
 })
+//search
+
+app.use('/', searchRouter);
+
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page not found!!", 404));
 });
@@ -100,6 +111,8 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render("error.ejs",{message});
     // res.status(statusCode).send({ error: message });
 });
+
+
 app.listen(8080, () => {
     console.log("server started.");
 });
