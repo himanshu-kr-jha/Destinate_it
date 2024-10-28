@@ -97,16 +97,25 @@
             <a class="nav-link" href="/listing">Explore &nbsp; <i class="fa-solid fa-binoculars" style="color: #fe424d; font-size: medium;"></i></a>
         </div>
         <div class="navbar-nav">
-            <form class="form-inline">
-                <input class="form-control mr-sm-2 search-inp" type="search" placeholder="Search destinations" aria-label="Search">
-                <button class="btn search-btn my-2 my-sm-0" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <form class="form-inline search-form" action="/search" method="GET">
+                <input
+                    class="form-control mr-sm-2 search-inp"
+                    type="search"
+                    name="q"
+                    placeholder="Search destinations"
+                    aria-label="Search"
+                />
+                <button class="btn search-btn my-2 my-sm-0" type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
             </form>
+            
         </div>
         <div class="navbar-nav ml-auto">
-            <a class="nav-link name" href="/listing/new"><b>Destinate !t</b> &nbsp;<i class="fa-solid fa-location-dot" style="color: #fe424d; font-size: medium;"></i></a>
+            <a class="nav-link name" href="/listing/new"><b></b> &nbsp;<i class="fa-solid fa-location-dot" style="color: #fe424d; font-size: medium;">  Destinate !t</i></a>
             <% if (!currUser) { %>
-                <a class="nav-link" href="/user/signup"><b> <span class="span-link"></span> <i class="fa-solid fa-user-plus" style="color: #fe424d; font-size: medium;"></i></b></a>
-                <a class="nav-link" href="/user/login"><b><span class="span-link "></span></b> <i class="fa-solid fa-right-to-bracket" style="color: #fe424d; font-size: medium ;"></i></a>
+                <a class="nav-link" href="/user/signup"><b> <span class="span-link"></span> <i class="fa-solid fa-user-plus" style="color: #fe424d; font-size: medium;">  SignUp</i></b></a>
+                <a class="nav-link" href="/user/login"><b><span class="span-link "></span></b> <i class="fa-solid fa-right-to-bracket" style="color: #fe424d; font-size: medium ;">  Login</i></a>
             <% } %>
             <% if (currUser) { %>
                 <a class="nav-link" href="/user/logout"><b><span class="span-link"></span> <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fe424d;"></i></b></a>

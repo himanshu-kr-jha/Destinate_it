@@ -1,0 +1,114 @@
+<% layout("layouts/boilerplate") %>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    /* Custom styles for smaller, fixed-size cards with rounded corners */
+    .card {
+        width: 300px;
+        height: 350px;
+        margin: 10px;
+        padding: 3px;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card img {
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        height: 150px;
+        object-fit: cover;
+    }
+    
+    .card-body {
+        padding: 10px;
+    }
+    
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+    
+    .card-text {
+        font-size: 0.9rem;
+    }
+
+    .card-location {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .description-short {
+        max-height: 45px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Search Results for "<%= searchQuery %>"</h1>
+
+        <% if (results.length > 0) { %>
+            
+            <div id="search-results" class="d-flex flex-wrap justify-content-center">
+                <% results.slice(0, 5).forEach(destination => { %> <!-- Initially show 5 results -->
+                    <a href="/listing/<%=destination._id%>" style="text-decoration: none;" >
+                    <div class="card mb-3">        
+                        <img src="<%= destination.image.url %>" class="img-fluid" alt="<%= destination.title %>">
+                        <div class="card-body">
+                            <h5 class="card-title" style="color: #fe424d; font-size: medium;"><%= destination.title %></h5>
+                            <p class="card-text description-short" style="color: #000; font-size: medium;"><%= destination.description %></p>
+                            <p class="card-location">Location: <%= destination.location %>, <%= destination.country %></p>
+                        </div>
+                    </div>
+                </a>
+                <% }) %>
+            </div>
+
+            <!-- "Show More" Button -->
+            <% if (results.length > 5) { %> <!-- Show the button only if there are more results -->
+                <div class="text-center">
+                    <button id="load-more-btn" class="btn" style="background-color: #fe424d; color: white; font-size: medium;">Show more</button>
+                </div>
+            <% } %>
+
+        <% } else { %>
+            <p>No results found for "<%= searchQuery %>".</p>
+        <% } %>
+    </div>
+
+    <script>
+        const results = <%- JSON.stringify(results) %>;
+        let currentIndex = 5; // Start with the first 5 results
+
+        document.getElementById('load-more-btn')?.addEventListener('click', function() {
+            const searchResultsContainer = document.getElementById('search-results');
+            const newResults = results.slice(currentIndex, currentIndex + 5); // Load 5 more results
+
+            newResults.forEach(destination => {
+                const newCard = `
+                <a href="/listing/${destination._id}" style="text-decoration: none;" >
+                <div class="card mb-3">
+                    <img src="${destination.image.url}" class="img-fluid" alt="${destination.title}">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color: #fe424d; font-size: medium;">${destination.title}</h5>
+                        <p class="card-text description-short" style="color: #000; font-size: medium;">${destination.description}</p>
+                        <p class="card-location">Location: ${destination.location}, ${destination.country}</p>
+                    </div>
+                </div>
+                </a>`;
+                
+                searchResultsContainer.insertAdjacentHTML('beforeend', newCard);
+            });
+
+            currentIndex += 5; // Update the index
+
+            // Hide the "Show more" button if no more results
+            if (currentIndex >= results.length) {
+                document.getElementById('load-more-btn').style.display = 'none';
+            }
+        });
+    </script>
+</body>
