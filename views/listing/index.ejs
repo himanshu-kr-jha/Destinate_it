@@ -1,12 +1,11 @@
 <% layout("layouts/boilerplate") %>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 <body>
-    <!-- <h1>All Listings</h1> -->
     <%- include("../includes/category.ejs") %>
     
     <div class="row row-cards row-cols-lg-3 row-cols-md-2 row-cols-lg-1 mb-3 mt-3">
-        <% for(let data of lists) { %>
-            <a href="/listing/<%=data._id%>" style="text-decoration: none;" >
+        <% for(let data of paginatedLists) { %>
+            <a href="/listing/<%= data._id %>" style="text-decoration: none;">
                 <div class="card-list cols" style="width: 20rem">
                     <img class="card-img-top-list" src="<%= data.image.url %>" alt="Card image cap" style="height: 20rem"/>
                     <div class="card-img-overlay-list"></div>
@@ -21,52 +20,109 @@
             </a>
         <% } %>
     </div>
+
+    <div class="pagination d-flex justify-content-center mt-4">
+        <% if (currentPage > 1) { %>
+            <a href="?page=<%= currentPage - 1 %>" class="btn me-2" role="button"><i class="fas fa-arrow-left"></i></a>
+        <% } else { %>
+            <button class="btn me-2" disabled><i class="fas fa-arrow-left"></i></button>
+        <% } %>
+    
+        <% for (let i = 1; i <= totalPages; i++) { %>
+            <% if (i === currentPage) { %>
+                <button class="btn me-2" disabled><%= i %></button>
+            <% } else { %>
+                <a href="?page=<%= i %>" class="btn  me-2" role="button"><%= i %></a>
+            <% } %>
+        <% } %>
+    
+        <% if (currentPage < totalPages) { %>
+            <a href="?page=<%= currentPage + 1 %>" class="btn" role="button"><i class="fas fa-arrow-right"></i></a>
+        <% } else { %>
+            <button class="btn btn-secondary" disabled><i class="fas fa-arrow-right"></i></button>
+        <% } %>
+    </div>
+    
+
     <style>
         #filters {
             margin-top: 1rem;
         }
-    
         .filter {
             text-align: center;
             margin: 0.5rem;
             opacity: 0.6;
             transition: opacity 0.3s ease;
-            padding: 0 1rem; /* Space between filters */
+            padding: 0 1rem;
         }
-    
         .filter:hover {
             opacity: 1;
             cursor: pointer;
         }
-    
         .filter p {
             margin-top: 0.5rem;
             font-size: 0.9rem;
         }
-        .navbar{
+
+    .pagination {
+        margin: 1rem 0;
+    }
+
+    .pagination .btn {
+        padding: 5px 15px;
+        font-size: 1rem;
+    }
+
+    .pagination .btn-primary {
+        background-color: white; /* Background for normal buttons */
+        color: #fe424d;          /* Text color */
+        /* border: 1px solid #fe424d; Thin border */
+    }
+
+    .pagination .btn:disabled {
+        background-color: white; /* Background for disabled buttons */
+        border: none;            /* No border */
+    }
+
+    .pagination .btn {
+        /* border-color: #fe424d;   Thin border for outline buttons */
+        color: #fe424d;          /* Text color */
+    }
+
+    .pagination .btn:hover {
+        background-color: #fe424d; /* Background on hover */
+        color: white;               /* Text color on hover */
+    }
+
+    /* Style for the currently selected page */
+    .pagination .btn.selected {
+        background-color: #fe424d; /* Background for selected page */
+        color: white;               /* Text color for selected page */
+        border: 1px solid #fe424d;  /* Thin border for selected page */
+    }
+
+    
+        .navbar {
             background-color: white !important;
         }
         @media (min-width: 992px) {
             .filter {
-                flex: 1 1 calc(10% - 2rem); /* Adjusted to include padding */
+                flex: 1 1 calc(10% - 2rem);
                 max-width: calc(10% - 2rem);
             }
         }
-    
         @media (max-width: 991.98px) and (min-width: 768px) {
             .filter {
                 flex: 1 1 calc(20% - 2rem);
                 max-width: calc(20% - 2rem);
             }
         }
-    
         @media (max-width: 767.98px) {
             .filter {
                 flex: 1 1 calc(33.333% - 2rem);
                 max-width: calc(33.333% - 2rem);
             }
         }
-    
         @media (max-width: 575.98px) {
             .filter {
                 flex: 1 1 100%;
