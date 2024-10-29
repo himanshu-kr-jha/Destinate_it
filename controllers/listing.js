@@ -22,7 +22,15 @@ module.exports.postListing=async (req, res, next) => {
 
 module.exports.getIndexListing=async (req, res) => {
     let allListing = await Listing.find();
-    res.render("listing/index.ejs", { lists: allListing });
+    const page = parseInt(req.query.page) || 1; // Current page number
+    const limit = 3; // Number of listings per page
+    const offset = (page - 1) * limit; // Offset for the current page
+    const totalCount = await Listing.countDocuments(); // Total number of listings
+    const totalPages = Math.ceil(totalCount / limit); // Total pages
+    const lists = await Listing.find().skip(offset).limit(limit); // Fetch listings for current page
+    res.render('listing/index.ejs', { lists, paginatedLists: lists, currentPage: page, totalPages });
+    
+    // res.render("listing/index.ejs", { lists: allListing });
 }
 
 module.exports.addnewListing=(req, res) => {

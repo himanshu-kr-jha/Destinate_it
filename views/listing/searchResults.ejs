@@ -1,13 +1,14 @@
 <% layout("layouts/boilerplate") %>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
     /* Custom styles for smaller, fixed-size cards with rounded corners */
     .card {
-        width: 300px;
+        width: 100%; /* Make cards full width */
+        max-width: 300px; /* Limit max width */
         height: 350px;
         margin: 10px;
-        padding: 3px;
         border-radius: 15px;
         overflow: hidden;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -16,7 +17,7 @@
     .card img {
         border-top-left-radius: 15px;
         border-top-right-radius: 15px;
-        height: 150px;
+        height: 170px;
         object-fit: cover;
     }
     
@@ -44,6 +45,13 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+
+    /* Responsive styling */
+    @media (max-width: 576px) {
+        .card {
+            width: 100%; /* Full width for mobile */
+        }
+    }
 </style>
 
 <body>
@@ -51,10 +59,9 @@
         <h1 class="mb-4">Search Results for "<%= searchQuery %>"</h1>
 
         <% if (results.length > 0) { %>
-            
             <div id="search-results" class="d-flex flex-wrap justify-content-center">
-                <% results.slice(0, 5).forEach(destination => { %> <!-- Initially show 5 results -->
-                    <a href="/listing/<%=destination._id%>" style="text-decoration: none;" >
+                <% results.slice(0, 3).forEach(destination => { %> <!-- Initially show 3 results -->
+                    <a href="/listing/<%= destination._id %>" style="text-decoration: none;">
                     <div class="card mb-3">        
                         <img src="<%= destination.image.url %>" class="img-fluid" alt="<%= destination.title %>">
                         <div class="card-body">
@@ -63,16 +70,19 @@
                             <p class="card-location">Location: <%= destination.location %>, <%= destination.country %></p>
                         </div>
                     </div>
-                </a>
+                    </a>
                 <% }) %>
             </div>
 
-            <!-- "Show More" Button -->
-            <% if (results.length > 5) { %> <!-- Show the button only if there are more results -->
-                <div class="text-center">
-                    <button id="load-more-btn" class="btn" style="background-color: #fe424d; color: white; font-size: medium;">Show more</button>
-                </div>
-            <% } %>
+            <!-- Pagination Controls -->
+            <div class="text-center">
+                <button id="prev-btn" class="btn" style="background-color: #fe424d; color: white; font-size: medium;" disabled>
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <button id="next-btn" class="btn" style="background-color: #fe424d; color: white; font-size: medium;">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
 
         <% } else { %>
             <p>No results found for "<%= searchQuery %>".</p>
@@ -81,15 +91,20 @@
 
     <script>
         const results = <%- JSON.stringify(results) %>;
-        let currentIndex = 5; // Start with the first 5 results
+        const resultsPerPage = 3;
+        let currentPage = 0;
 
-        document.getElementById('load-more-btn')?.addEventListener('click', function() {
+        function renderResults() {
             const searchResultsContainer = document.getElementById('search-results');
-            const newResults = results.slice(currentIndex, currentIndex + 5); // Load 5 more results
+            searchResultsContainer.innerHTML = ''; // Clear previous results
 
-            newResults.forEach(destination => {
+            const startIndex = currentPage * resultsPerPage;
+            const endIndex = startIndex + resultsPerPage;
+            const paginatedResults = results.slice(startIndex, endIndex);
+
+            paginatedResults.forEach(destination => {
                 const newCard = `
-                <a href="/listing/${destination._id}" style="text-decoration: none;" >
+                <a href="/listing/${destination._id}" style="text-decoration: none;">
                 <div class="card mb-3">
                     <img src="${destination.image.url}" class="img-fluid" alt="${destination.title}">
                     <div class="card-body">
@@ -103,12 +118,22 @@
                 searchResultsContainer.insertAdjacentHTML('beforeend', newCard);
             });
 
-            currentIndex += 5; // Update the index
+            // Disable buttons based on the current page
+            document.getElementById('prev-btn').disabled = currentPage === 0;
+            document.getElementById('next-btn').disabled = endIndex >= results.length;
+        }
 
-            // Hide the "Show more" button if no more results
-            if (currentIndex >= results.length) {
-                document.getElementById('load-more-btn').style.display = 'none';
-            }
+        document.getElementById('next-btn').addEventListener('click', function() {
+            currentPage++;
+            renderResults();
         });
+
+        document.getElementById('prev-btn').addEventListener('click', function() {
+            currentPage--;
+            renderResults();
+        });
+
+        // Initial render
+        renderResults();
     </script>
 </body>
