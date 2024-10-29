@@ -3,13 +3,50 @@
         background-color: #fe424d;
         color: white;
         border-radius: 25px !important;
+        margin-right: 0.5rem;
     }
 
     .search-inp {
         border-radius: 25px;
-        padding-left: 1rem;
+        /* padding-left: 1rem; */
+        height: 30px;
+        font-size: 0.875rem;
+        /* padding: 0.25rem 0.75rem; */
+        border: 1px solid #ddd;
+        transition: width 0.3s ease, opacity 0.3s ease;
+        /* Smooth width and opacity transition */
+        width: 15rem;
+        opacity: 1;
     }
 
+    .search-inp::placeholder {
+        font-size: 0.75rem;
+        color: #888;
+    }
+
+    .hide {
+        display: none;
+        width: 0;
+        opacity: 0;
+    }
+
+    /* Hide search input by default on screens less than 760px */
+    @media (max-width: 760px) {
+        .search-inp {
+            display: none;
+            width: 0;
+            opacity: 0;
+        }
+
+        .search-inp.show {
+            display: inline-block;
+            width: 8rem;
+            /* Adjust width as needed */
+            opacity: 1;
+        }
+    }
+
+    /* Navbar general styling */
     .navbar .navbar-nav {
         display: flex;
         align-items: center;
@@ -36,47 +73,35 @@
         justify-content: center;
     }
 
+    /* Overlay */
     .overlay {
         position: fixed;
         top: 0;
         left: 0;
-        padding-top: 10px;
-        padding-bottom: 50px;
         width: 100%;
         height: 100%;
         background: white;
         z-index: 1030;
         display: none;
+        /* Hidden by default */
     }
 
     .overlay.show {
         display: block;
     }
 
-    .navbar-toggler {
-        border-color: #fe424d;
-    }
-
-    .search-inp.hide {
-        display: none;
-    }
-
-    .search-inp.show {
-        display: inline-block;
-        margin-bottom: 1rem;
-    }
-
-    /* Media query for screens less than 768px */
-    @media (max-width: 768px) {
+    /* Media query for smaller screens (less than 760px) */
+    @media (max-width: 760px) {
         .navbar-nav {
-            flex-direction: column;
+            flex-direction: row;
             text-align: center;
+            width: 100%;
         }
 
         .navbar-nav .nav-link,
         .form-inline {
-            width: 100%;
-            margin-bottom: 10px;
+            width: auto;
+            margin-bottom: 0.9rem;
         }
 
         .form-inline {
@@ -85,87 +110,96 @@
 
         .navbar-nav .name,
         .navbar-nav .search-btn {
+            width: auto;
+        }
+
+        .navbar-nav {
+            flex-direction: row;
+            text-align: center;
             width: 100%;
         }
-    }
-</style>
 
-<div class="overlay"></div> <!-- Overlay element -->
+        .navbar-nav .search-btn,
+        .navbar-nav .name,
+        .navbar-nav .nav-link {
+            display: inline-flex;
+            align-items: center;
+            margin: 0.5rem;
+        }
+
+        /* Hide the navbar-toggler (hamburger icon) */
+        .navbagir-toggler {
+            display: none;
+        }
+
+        .search-inp {
+            margin-top: 0.8rem;
+            border-radius: 25px;
+            height: 30px;
+            font-size: 0.875rem;
+            padding: 0.25rem 0.75rem;
+            border: 1px solid #ddd;
+        }
+    }
+    @media (min-width: 760px) {
+    .search-inp {
+        width: 15rem; /* Adjust width as desired for larger screens */
+    }
+}
+</style>
 
 <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom sticky-top">
     <a class="navbar-brand" href="/listing"><i class="fa-solid fa-tents"></i></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-            <a class="nav-link" href="/listing">Explore &nbsp; <i class="fa-solid fa-binoculars" style="color: #fe424d; font-size: medium;"></i></a>
-            <form class="form-inline search-form" action="/search" method="GET">
-                <input
-                    class="form-control search-inp"
-                    type="search"
-                    name="q"
-                    placeholder="Search destinations"
-                    aria-label="Search"
-                />
-                <button class="btn search-btn" type="submit">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-            </form>
-            <a class="nav-link name" href="/listing/new"><b></b> &nbsp;<i class="fa-solid fa-location-dot" style="color: #fe424d; font-size: medium;">  Destinate !t</i></a>
-            <% if (!currUser) { %>
-                <a class="nav-link" href="/user/signup"><b> <span class="span-link"></span> <i class="fa-solid fa-user-plus" style="color: #fe424d; font-size: medium;">  SignUp</i></b></a>
-                <a class="nav-link" href="/user/login"><b><span class="span-link "></span></b> <i class="fa-solid fa-right-to-bracket" style="color: #fe424d; font-size: medium ;">  Login</i></a>
+    <div class="navbar-nav">
+        <!-- Search button and input form -->
+        <form class="form-inline search-form" action="/search" method="GET">
+            <input class="form-control search-inp" type="search" name="q" placeholder="Search destinations"
+                aria-label="Search" />
+        </form>
+        <!-- "Destinate It" link -->
+        <button class="btn search-btn" type="button">
+            <i class="fa fa-magnifying-glass"></i>
+        </button>
+        <a class="nav-link name" href="/listing/new"><b><i class="fa-solid fa-location-dot"
+                    style="color: #fe424d; font-size: medium;"></i></b></a>
+
+        <!-- User login/logout links -->
+        <% if (!currUser) { %>
+            <a class="nav-link" href="/user/signup"><b><i class="fa-solid fa-user-plus"
+                        style="color: #fe424d; font-size: medium;"></i></b></a>
+            <a class="nav-link" href="/user/login"><b><i class="fa-solid fa-right-to-bracket"
+                        style="color: #fe424d; font-size: medium;"></i></b></a>
             <% } %>
-            <% if (currUser) { %>
-                <a class="nav-link" href="/user/logout"><b><span class="span-link"></span> <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fe424d;"></i></b></a>
-            <% } %>
-        </div>
+                <% if (currUser) { %>
+                    <a class="nav-link" href="/user/logout"><i class="fa-solid fa-arrow-right-from-bracket"
+                            style="color: #fe424d;"></i></a>
+                    <% } %>
     </div>
 </nav>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const navbar = document.querySelector('.navbar');
-        const navbarToggler = document.querySelector('.navbar-toggler');
-        const navbarCollapse = document.getElementById('navbarNavAltMarkup');
+    document.addEventListener('DOMContentLoaded', function () {
         const overlay = document.querySelector('.overlay');
         const searchInp = document.querySelector('.search-inp');
         const searchBtn = document.querySelector('.search-btn');
-        const spanLink = document.querySelector(".span-link");
+        const navItems = document.querySelectorAll('.navbar-nav .nav-link, .navbar-nav .name');
 
-        navbarToggler.addEventListener('click', function() {
-            if (navbarCollapse.classList.contains('show')) {
-                navbar.classList.remove('bg-expanded');
-                navbar.classList.add('border-bottom');
-                searchInp.classList.add('hide');
-                spanLink.classList.remove("hide");
-                overlay.classList.remove('show');
+        searchBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            if (window.innerWidth <= 760) {
+                searchInp.classList.toggle('show');
+                overlay.classList.toggle('show');
+                navItems.forEach(item => item.style.display = searchInp.classList.contains('show') ? 'none' : 'inline-flex');
             } else {
-                navbar.classList.add('bg-expanded');
-                navbar.classList.remove('border-bottom');
-                overlay.classList.add('show');
-                spanLink.classList.remove("hide");
-                searchInp.classList.add('hide');
-            }
-        });
-
-        searchBtn.addEventListener('click', function(event) {
-            if (window.innerWidth < 768 && searchInp.classList.contains('hide')) {
-                event.preventDefault();
-                searchInp.classList.remove('hide');
-                searchInp.classList.add('show');
                 searchInp.focus();
             }
         });
 
-        window.addEventListener('resize', function() {
-            if (window.innerWidth >= 768) {
-                navbar.classList.remove('bg-expanded');
-                overlay.classList.remove('show');
-                searchInp.classList.remove('hide');
-                searchInp.classList.remove('show');
-            }
+        overlay.addEventListener('click', function () {
+            searchInp1.classList.remove('show');
+            overlay.classList.remove('show');
+            navItems.forEach(item => item.style.display = 'inline-flex');
         });
     });
 </script>
