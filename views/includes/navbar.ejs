@@ -1,52 +1,5 @@
 <style>
-    .search-btn {
-        background-color: #fe424d;
-        color: white;
-        border-radius: 25px !important;
-        margin-right: 0.5rem;
-    }
 
-    .search-inp {
-        border-radius: 25px;
-        /* padding-left: 1rem; */
-        height: 30px;
-        font-size: 0.875rem;
-        /* padding: 0.25rem 0.75rem; */
-        border: 1px solid #ddd;
-        transition: width 0.3s ease, opacity 0.3s ease;
-        /* Smooth width and opacity transition */
-        width: 15rem;
-        opacity: 1;
-    }
-
-    .search-inp::placeholder {
-        font-size: 0.75rem;
-        color: #888;
-    }
-
-    .hide {
-        display: none;
-        width: 0;
-        opacity: 0;
-    }
-
-    /* Hide search input by default on screens less than 760px */
-    @media (max-width: 760px) {
-        .search-inp {
-            display: none;
-            width: 0;
-            opacity: 0;
-        }
-
-        .search-inp.show {
-            display: inline-block;
-            width: 8rem;
-            /* Adjust width as needed */
-            opacity: 1;
-        }
-    }
-
-    /* Navbar general styling */
     .navbar .navbar-nav {
         display: flex;
         align-items: center;
@@ -73,29 +26,26 @@
         justify-content: center;
     }
 
-    /* Overlay */
-    .overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: white;
-        z-index: 1030;
-        display: none;
-        /* Hidden by default */
-    }
 
-    .overlay.show {
-        display: block;
-    }
 
     /* Media query for smaller screens (less than 760px) */
     @media (max-width: 760px) {
+        .infoText {
+            display: none;
+            width: 0;
+            opacity: 0;
+        }
+
         .navbar-nav {
             flex-direction: row;
             text-align: center;
             width: 100%;
+        }
+
+        .hide {
+            /* display: none; */
+            opacity: 0;
+
         }
 
         .navbar-nav .nav-link,
@@ -131,75 +81,223 @@
         .navbagir-toggler {
             display: none;
         }
+    }
 
+    @media (min-width: 760px) {
         .search-inp {
-            margin-top: 0.8rem;
-            border-radius: 25px;
-            height: 30px;
-            font-size: 0.875rem;
-            padding: 0.25rem 0.75rem;
-            border: 1px solid #ddd;
+            width: 15rem;
+            /* Adjust width as desired for larger screens */
         }
     }
-    @media (min-width: 760px) {
-    .search-inp {
-        width: 15rem; /* Adjust width as desired for larger screens */
+
+    @media(max-width:378px) {
+        .logo-text {
+            opacity: 0;
+            display: none;
+        }
     }
-}
+
+    .icon-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .icon-text i {
+        font-size: 1.3rem;
+        /* Adjust the icon size as needed */
+    }
+
+    .icon-text .infoText {
+        font-size: 0.85rem;
+        /* Adjust the text size as needed */
+        margin-top: 0.25rem;
+        /* Adjust the space between the icon and text */
+    }
+
+    /* Search button styling */
+    .search-btn {
+        background-color: #fe424d;
+        color: white;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        /* Ensures it's always on top */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-btn i {
+        font-size: 1.5rem;
+    }
+
+    /* Modal background */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        /* Hidden by default */
+        z-index: 2000;
+    }
+
+    .modal-overlay.show {
+        display: block;
+    }
+
+    /* Modal styling */
+    .search-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 400px;
+        z-index: 2100;
+        display: none;
+    }
+
+    .search-modal.show {
+        display: block;
+    }
+
+    .search-modal input[type="search"] {
+        width: 100%;
+        padding: 10px;
+        border-radius: 25px;
+        border: 1px solid #ddd;
+        font-size: 1rem;
+        outline: none;
+    }
+
+    /* Close button inside the modal */
+    .search-modal .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #fe424d;
+    }
+
+    /* Media query for smaller screens */
+    @media (max-width: 760px) {
+        .search-modal {
+            width: 95%;
+        }
+    }
 </style>
+</head>
 
-<nav class="navbar navbar-expand-md navbar-light bg-light border-bottom sticky-top">
-    <a class="navbar-brand" href="/listing"><i class="fa-solid fa-tents"></i></a>
-    <div class="navbar-nav">
-        <!-- Search button and input form -->
-        <form class="form-inline search-form" action="/search" method="GET">
-            <input class="form-control search-inp" type="search" name="q" placeholder="Search destinations"
-                aria-label="Search" />
-        </form>
-        <!-- "Destinate It" link -->
-        <button class="btn search-btn" type="button">
-            <i class="fa fa-magnifying-glass"></i>
-        </button>
-        <a class="nav-link name" href="/listing/new"><b><i class="fa-solid fa-location-dot"
-                    style="color: #fe424d; font-size: medium;"></i></b></a>
+<body>
+    <!-- Navbar (for context) -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom sticky-top">
+        <a class="navbar-brand" href="/listing"><i class="fa-solid fa-tents"> <span class="logo-text"
+                    style="font-size: 1.4rem;">Destinate !t</span></i></a>
+        <div class="navbar-nav">
+            <div class="navbar-nav">
+                <!-- Search button and input form -->
+                <form class="form-inline search-form hide" action="/search" method="GET">
+                    <input class="form-control search-inp" type="search" name="q" placeholder="Search destinations"
+                        aria-label="Search" />
+                    <!-- Search button -->
+                </form>
 
-        <!-- User login/logout links -->
-        <% if (!currUser) { %>
-            <a class="nav-link" href="/user/signup"><b><i class="fa-solid fa-user-plus"
-                        style="color: #fe424d; font-size: medium;"></i></b></a>
-            <a class="nav-link" href="/user/login"><b><i class="fa-solid fa-right-to-bracket"
-                        style="color: #fe424d; font-size: medium;"></i></b></a>
-            <% } %>
-                <% if (currUser) { %>
-                    <a class="nav-link" href="/user/logout"><i class="fa-solid fa-arrow-right-from-bracket"
-                            style="color: #fe424d;"></i></a>
+                <button class="btn search-btn hide" type="button">
+                    <i class="fa fa-magnifying-glass"></i>
+                </button>
+                <!-- "Destinate It" link -->
+                <a class="nav-link name" href="/listing/new">
+                    <div class="icon-text">
+                        <i class="fa-solid fa-location-dot" style="color: #fe424d;"></i>
+                        <span class="infoText">Destinate It</span>
+                    </div>
+                </a>
+
+                <!-- User login/logout links -->
+                <% if (!currUser) { %>
+                    <a class="nav-link" href="/user/signup">
+                        <div class="icon-text">
+                            <i class="fa-solid fa-user-plus" style="color: #fe424d;"></i>
+                            <span class="infoText">SignUp</span>
+                        </div>
+                    </a>
+                    <a class="nav-link" href="/user/login">
+                        <div class="icon-text">
+                            <i class="fa-solid fa-right-to-bracket" style="color: #fe424d;"></i>
+                            <span class="infoText">LogIn</span>
+                        </div>
+                    </a>
                     <% } %>
+
+                        <% if (currUser) { %>
+                            <a class="nav-link" href="/user/logout">
+                                <div class="icon-text">
+                                    <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fe424d;"></i>
+                                    <span class="infoText">LogOut</span>
+                                </div>
+                            </a>
+                            <% } %>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search input form (hidden by default) -->
+    <!-- Search button fixed at the bottom right -->
+    <button class="btn search-btn" type="button">
+        <i class="fa fa-magnifying-glass"></i>
+    </button>
+
+    <!-- Modal overlay -->
+    <div class="modal-overlay"></div>
+
+    <!-- Modal for search input -->
+    <div class="search-modal">
+        <button class="close-btn">&times;</button>
+        <form action="/search" method="GET">
+            <input type="search" name="q" placeholder="Search destinations" aria-label="Search" />
+        </form>
     </div>
-</nav>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const overlay = document.querySelector('.overlay');
-        const searchInp = document.querySelector('.search-inp');
-        const searchBtn = document.querySelector('.search-btn');
-        const navItems = document.querySelectorAll('.navbar-nav .nav-link, .navbar-nav .name');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchBtn = document.querySelector('.search-btn');
+            const modalOverlay = document.querySelector('.modal-overlay');
+            const searchModal = document.querySelector('.search-modal');
+            const closeBtn = document.querySelector('.close-btn');
 
-        searchBtn.addEventListener('click', function (event) {
-            event.preventDefault();
+            // Open modal when search button is clicked
+            searchBtn.addEventListener('click', function () {
+                modalOverlay.classList.add('show');
+                searchModal.classList.add('show');
+            });
 
-            if (window.innerWidth <= 760) {
-                searchInp.classList.toggle('show');
-                overlay.classList.toggle('show');
-                navItems.forEach(item => item.style.display = searchInp.classList.contains('show') ? 'none' : 'inline-flex');
-            } else {
-                searchInp.focus();
-            }
+            // Close modal when clicking the close button or overlay
+            closeBtn.addEventListener('click', function () {
+                modalOverlay.classList.remove('show');
+                searchModal.classList.remove('show');
+            });
+
+            modalOverlay.addEventListener('click', function () {
+                modalOverlay.classList.remove('show');
+                searchModal.classList.remove('show');
+            });
         });
-
-        overlay.addEventListener('click', function () {
-            searchInp1.classList.remove('show');
-            overlay.classList.remove('show');
-            navItems.forEach(item => item.style.display = 'inline-flex');
-        });
-    });
-</script>
+    </script>
+</body>
