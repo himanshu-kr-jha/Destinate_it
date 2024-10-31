@@ -96,7 +96,7 @@ module.exports.categorySearch = async (req, res) => {
 
         // Pagination logic (if applicable)
         const page = parseInt(req.query.page) || 1; // Current page number
-        const limit = 10; // Set your desired limit per page
+        const limit = 3; // Set your desired limit per page
         const total = results.length; // Total number of results
         const totalPages = Math.ceil(total / limit); // Calculate total pages
         const paginatedLists = results.slice((page - 1) * limit, page * limit); // Get results for current page
