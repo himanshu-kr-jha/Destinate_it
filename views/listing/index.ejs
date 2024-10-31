@@ -14,13 +14,15 @@
                             <b><%= data.title %></b>
                             <br>
                             &#8377; <%= data.price.toLocaleString("en-IN") %>
+                            <br>
+                            <span class="text-muted"><%= data.category %></span> <!-- Category Info -->
                         </p>
                     </div>
                 </div>
             </a>
         <% } %>
     </div>
-
+    
     <div class="pagination d-flex justify-content-center mt-4">
         <!-- First Page Button -->
         <% if (currentPage > 1) { %>

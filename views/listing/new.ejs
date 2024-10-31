@@ -12,15 +12,11 @@
                         <div class="invalid-feedback">Give a valid title!!</div>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="description">Description:</label>afs
+                        <label for="description">Description:</label>
                         <textarea class="form-control" name="listing[description]" id="description" required placeholder="Description about your place"></textarea>
                         <div class="valid-feedback">Well described!!</div>
                         <div class="invalid-feedback">Can't be empty</div>
                     </div>
-                    <!-- <div class="form-group mb-3">
-                        <label for="image">Image URL:</label>
-                        <input type="url" class="form-control" name="listing[image]" id="image" placeholder="Image URL">
-                    </div> -->
                     <div class="form-group mb-3">
                         <label for="image">Upload Image</label>
                         <input type="file" class="form-control" name="listing[image]" id="image" required>
@@ -42,6 +38,29 @@
                         <input type="text" class="form-control" name="listing[country]" id="country" placeholder="India" required>
                         <div class="valid-feedback">Nice!!</div>
                         <div class="invalid-feedback">Can't be empty!!</div>
+                    </div>
+                    <!-- Category dropdown -->
+                    <div class="form-group mb-4">
+                        <label for="category">Category:</label>
+                        <select class="form-control" name="listing[category]" id="category" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="Homes">Homes</option>
+                            <option value="Restaurants">Restaurants</option>
+                            <option value="Nature">Nature</option>
+                            <option value="Wellness">Wellness</option>
+                            <option value="Adventure">Adventure</option>
+                            <option value="Art & Culture">Art & Culture</option>
+                            <option value="Cafes">Cafes</option>
+                            <option value="Gardens">Gardens</option>
+                            <option value="Monuments">Monuments</option>
+                            <option value="Historical Monument">Historical Monument</option>
+                            <option value="Cultural Site">Cultural Site</option>
+                            <option value="Modern Landmark">Modern Landmark</option>
+                            <option value="Natural Wonder">Natural Wonder</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="valid-feedback">Great choice!</div>
+                        <div class="invalid-feedback">Please select a category</div>
                     </div>
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary add-btn">Add Place</button>
