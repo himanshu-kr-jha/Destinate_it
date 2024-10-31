@@ -1,48 +1,69 @@
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 const Review = require("./review.js");
 const User = require("./user.js");
-const Schema= mongoose.Schema;
-const listingSchema=new Schema({
-    title:{
-        type:String,
-        required:true,
+const Schema = mongoose.Schema;
+const listingSchema = new Schema({
+    title: {
+        type: String,
+        required: true,
     },
-    description:String,
-    image:{
-        url:String,
-        filename:String,
+    description: String,
+    image: {
+        url: String,
+        filename: String,
     },
-    price:Number,
-    location:String,
-    country:String,
-    reviews:[
+    price: Number,
+    location: String,
+    country: String,
+    reviews: [
         {
-            type:Schema.Types.ObjectId,
-            ref:"Review",
+            type: Schema.Types.ObjectId,
+            ref: "Review",
         },
     ],
-    owner:{
-        type:Schema.Types.ObjectId,
-        ref:"User"
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
     },
-    geometry:{
+    geometry: {
         type: {
-          type: String, // Don't do `{ location: { type: String } }`
-          enum: ['Point'], // 'location.type' must be 'Point'
-          required: true
+            type: String, // Don't do `{ location: { type: String } }`
+            enum: ['Point'], // 'location.type' must be 'Point'
+            required: true
         },
         coordinates: {
-          type: [Number],
-          required: true
+            type: [Number],
+            required: true
         }
-      }
-});
-
-listingSchema.post("findOneAndDelete",async(listing)=>{
-    if(listing){
-        await Review.deleteMany({_id:{$in: listing.reviews}})
+    },
+    category: {
+        type: String,
+        enum: [
+            "Homes",
+            "Restaurants",
+            "Nature",
+            "Wellness",
+            "Adventure",
+            "Art & Culture",
+            "Cafes",
+            "Gardens",
+            "Monuments",
+            "Historical Monument",
+            "Cultural Site",
+            "Modern Landmark",
+            "Natural Wonder",
+            "Other"
+        ],
+        required: false,
+        default: "Other"
     }
 });
 
-const Listing =mongoose.model("Listing",listingSchema);
+listingSchema.post("findOneAndDelete", async (listing) => {
+    if (listing) {
+        await Review.deleteMany({ _id: { $in: listing.reviews } })
+    }
+});
+
+const Listing = mongoose.model("Listing", listingSchema);
 module.exports = Listing;

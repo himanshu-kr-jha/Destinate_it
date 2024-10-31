@@ -22,7 +22,7 @@ router.get("/new", isLogged, listingConroller.addnewListing);
 // Show route
 router.get("/:id", wrapAsync(listingConroller.showListing));
 
-
+router.get("/category/:category",wrapAsync(listingConroller.categorySearch));
 // Edit route
 router.get("/:id/edit", 
     isLogged,
@@ -41,5 +41,6 @@ router.put("/:id",
 router.delete("/:id",isLogged,
     isOwner,
      wrapAsync(listingConroller.destroyListing));
+
 
 module.exports=router;
