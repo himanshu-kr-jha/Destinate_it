@@ -1,0 +1,153 @@
+body{
+    font-family: "Plus Jakarta Sans", sans-serif !important;
+    font-optical-sizing: auto;
+    font-style: normal;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+.container{
+    flex: 1;
+}
+.navbar {
+    height: 5rem;
+}
+
+.fa-tents {
+    color: #fe424d;
+    font-size: 2rem;
+}
+
+.nav-link{
+    color: #222222 !important;
+}
+
+.f-info-links a{
+    text-decoration: none;
+    color: #222222;
+}
+.f-info-links a:hover{
+    text-decoration: underline;
+}
+.f-info-links, .f-info-socials,.f-info-brand{
+    width: 100%;
+    vertical-align: middle;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+.f-info-socials i{
+    font-size: 1.2rem;
+    margin-right: 1rem;
+   
+}
+.f-info{
+    text-align: center;
+    height: 6rem;
+    display: flex;
+    background-color: #ebebeb;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: space-evenly;
+}
+
+/* cards */
+
+.row-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem; /* Space between cards */
+    justify-content: center;
+}
+
+.card-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* width: 20rem; */
+    height: 27rem; /* Set a fixed height */
+    box-sizing: border-box;
+    /* border: 1px solid #ddd; */
+    border: none !important;
+    border-radius: 1rem !important;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.card-list:hover {
+    transform: scale(1.02);
+}
+
+.card-img-top-list {
+    width: 100%;
+    height: 12rem; /* Fixed height for images */
+    object-fit: cover; /* Ensures images cover the area without distortion */
+}
+
+.card-body-list {
+    padding: 15px;
+    background-color: #fff;
+    flex: 1; /* Makes sure the body takes the remaining space */
+}
+
+.card-text-list {
+    margin: 0;
+    color: #555;
+}
+.card-img-overlay-list{
+    opacity: 0;
+}
+
+.card-img-overlay-list:hover{
+    opacity: 0.2;
+    background-color: white;
+}
+@media (max-width: 1200px) { /* Medium screens */
+    .card {
+        width: calc(33.333% - 20px); /* 3 cards per row */
+    }
+}
+
+@media (max-width: 768px) { /* Small screens */
+    .card {
+        width: calc(50% - 20px); /* 2 cards per row */
+    }
+}
+
+@media (max-width: 576px) { /* Extra small screens */
+    .card {
+        width: 100%; /* 1 card per row */
+    }
+}
+
+/* new form */
+.add-btn{
+    background-color: #fe424d !important;
+    border: none !important;
+}
+
+.show-img{
+    height: 30vh;
+    border-radius: 1rem!important;
+}
+.btns{
+    display: flex;
+}
+.show-card{
+    padding-left: 0;
+    padding-right: 0;
+    border-radius: 1rem;
+    border: none !important;
+    border-radius: 1rem;
+}
+
+#map { 
+    margin-top: 2rem; 
+    width: 130vh; 
+    height: 40vh;
+    border-radius: 2rem;
+}

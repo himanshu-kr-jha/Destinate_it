@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet" />
+    <style>
+        /* Basic layout */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #map {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+        }
+
+        #sidebar {
+            width: 30%;
+            max-width: 300px;
+            padding: 10px;
+            background-color: #f7f7f7;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .popup-card {
+    display: block; /* Ensure it's a block element for the link */
+    width: 200px; /* Set a fixed width for the card */
+    border-radius: 10px; /* Rounded corners */
+    overflow: hidden; /* Ensure the image doesn't overflow */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for hover effects */
+    text-decoration: none !important; /* Remove underline from link */
+    color: inherit; /* Inherit text color from parent */
+}
+
+.popup-card:hover {
+    transform: translateY(-2px); /* Slight lift effect on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
+
+.popup-card img {
+    width: 100%; /* Full width of the card */
+    height: 120px; /* Fixed height for images */
+    object-fit: cover; /* Cover the area without distortion */
+    border-bottom: 2px solid #f7f7f7; /* Border under the image for separation */
+}
+
+.popup-card h3 {
+    margin: 10px; /* Margin around the title */
+    font-size: 1.2em; /* Size of the title text */
+    font-weight: bold; /* Bold title */
+    text-decoration: none;
+    color: #333; /* Darker color for better readability */
+}
+.pop-a{
+    text-decoration: none;
+}
+
+/* Nearby places styling */
+.nearby-card {
+    margin-bottom: 15px; /* Space between cards */
+    padding: 15px; /* Increased padding for better spacing */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Slightly deeper shadow */
+    border-radius: 10px; /* More rounded corners */
+    background-color: #fff; /* White background for contrast */
+    transition: transform 0.2s, box-shadow 0.2s; /* Smooth transitions */
+    cursor: pointer; /* Indicate that the card is clickable */
+}
+
+.nearby-card:hover {
+    transform: translateY(-2px); /* Lift effect on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
+
+.nearby-card img {
+    width: 100%; /* Full width for images */
+    height: 120px; /* Fixed height for images */
+    object-fit: cover; /* Maintain aspect ratio */
+    border-radius: 8px 8px 0 0; /* Rounded top corners */
+}
+
+.nearby-card h3 {
+    margin: 10px 0 5px; /* Top and bottom margin for title */
+    font-size: 1.1em; /* Title font size */
+    font-weight: bold; /* Bold title for emphasis */
+    color: #333; /* Dark color for good readability */
+}
+
+.nearby-card p {
+    margin: 0; /* Remove margins for description */
+    color: #666; /* Lighter color for description */
+    font-size: 0.9em; /* Smaller font size */
+    line-height: 1.5; /* Improved line height for readability */
+}
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                transform: translateX(-100%);
+                z-index: 1000;
+                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+            }
+
+            #sidebar.show {
+                transform: translateX(0);
+            }
+
+            #toggle-sidebar {
+                display: block;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                z-index: 1100;
+                background-color: #fe424d;
+                color: white;
+                border: none;
+                padding: 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            }
+
+            .popup-card {
+                width: 150px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .popup-card img {
+                height: 80px;
+            }
+
+            .popup-card h3 {
+                font-size: 1rem;
+            }
+
+            .popup-card p {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* More details button */
+        #more-details {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        #toggle-sidebar {
+    display: block;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1100;
+    background-color: transparent; /* Make the button background transparent */
+    color: #333; /* Color of the hamburger icon */
+    border: none;
+    font-size: 24px; /* Size of the hamburger icon */
+    cursor: pointer;
+    padding: 10px; /* Add some padding around the icon */
+}
+#sidebar {
+    width: 30%;
+    max-width: 300px;
+    padding: 10px;
+    background-color: #f7f7f7;
+    overflow-y: auto;
+    transform: translateX(-100%); /* Hide sidebar initially */
+    transition: transform 0.3s ease;
+    position: fixed; /* Fixed position to overlay on the map */
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 1000;
+}
+
+#sidebar.show {
+    transform: translateX(0); /* Show sidebar */
+}
+
+    </style>
+</head>
+<body>
+    <!-- Sidebar Toggle Button for smaller screens -->
+    <!-- Sidebar Toggle Button for smaller screens -->
+<button id="toggle-sidebar" aria-label="Toggle Sidebar">
+    &#9776; <!-- Hamburger Icon -->
+</button>
+
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <!-- <h2>Nearby Places</h2> -->
+        <ul id="nearby-list"></ul>
+    </div>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+    <button id="more-details">More Details</button>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
+    <script>
+        mapboxgl.accessToken = "<%= process.env.MAP_API_KEY %>";
+
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/outdoors-v12',
+            center: [78.00882, 27.17493],
+            zoom: 5
+        });
+
+        var listings = <%- JSON.stringify(listings) %>;
+        let currentMarker = null;
+
+        listings.forEach(listing => {
+            if (listing.geometry && listing.geometry.coordinates) {
+                const [longitude, latitude] = listing.geometry.coordinates;
+                
+                const cardHTML = `
+                <a class="pop-a" href="/listing/${listing._id}">
+                    <div class="popup-card">
+                        <img src="${listing.image.url}" alt="${listing.title}">
+                        <h3 class="pop-h3">${listing.title}</h3>        
+                    </div>
+                `;
+                
+                const marker = new mapboxgl.Marker({ color: "red" })
+                    .setLngLat([longitude, latitude])
+                    .addTo(map);
+
+                // Create a popup and attach it to the marker
+                const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(cardHTML);
+                marker.setPopup(popup);
+            }
+        });
+
+        function showNearbyPlaces(coordinates) {
+            const nearbyList = document.getElementById('nearby-list');
+            nearbyList.innerHTML = ''; // Clear any previous content
+            const placesWithDistances = listings
+                .filter(listing => listing.geometry && listing.geometry.coordinates)
+                .map(listing => {
+                    const [lng, lat] = listing.geometry.coordinates;
+                    const distance = Math.sqrt(
+                        Math.pow(coordinates[0] - lng, 2) + Math.pow(coordinates[1] - lat, 2)
+                    );
+                    return { distance, listing };
+                })
+                .filter(item => item.distance < 2) // Customize this threshold as needed
+                .sort((a, b) => a.distance - b.distance);
+
+            placesWithDistances.forEach(({ distance, listing }) => {
+                const card = document.createElement('div');
+                card.className = 'nearby-card';
+
+                card.innerHTML = `
+                    <h3>${listing.title}</h3>
+                    <p>Distance: ${distance.toFixed(2)} km</p>
+                `;
+
+                card.addEventListener('click', () => {
+                    const [lng, lat] = listing.geometry.coordinates;
+                    map.flyTo({
+                        center: [lng, lat],
+                        zoom: 12,
+                        essential: true // this animation is considered essential with respect to the user experience
+                    });
+
+                    // Show more details button
+                    document.getElementById('more-details').style.display = 'block';
+                    // Save the current marker to allow for later detail access if needed
+                    currentMarker = listing;
+                });
+
+                nearbyList.appendChild(card);
+            });
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const userCoordinates = [position.coords.longitude, position.coords.latitude];
+
+                new mapboxgl.Marker({ color: 'blue' })
+                    .setLngLat(userCoordinates)
+                    .setPopup(new mapboxgl.Popup().setText("You are here"))
+                    .addTo(map);
+
+                map.setCenter(userCoordinates);
+                map.setZoom(12);
+
+                showNearbyPlaces(userCoordinates);
+            }, () => alert("Could not get your location."));
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+
+        // Toggle sidebar visibility on button click
+        // Toggle sidebar visibility on button click
+const toggleSidebarBtn = document.getElementById('toggle-sidebar');
+const sidebar = document.getElementById('sidebar');
+
+toggleSidebarBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('show');
+
+    // Change button text or appearance based on sidebar state
+    if (sidebar.classList.contains('show')) {
+        toggleSidebarBtn.innerHTML = '&#10005;'; // Close icon
+    } else {
+        toggleSidebarBtn.innerHTML = '&#9776;'; // Hamburger icon
+    }
+});
+
+    </script>
+</body>
+</html>

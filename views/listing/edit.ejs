@@ -1,0 +1,76 @@
+<% layout("layouts/boilerplate") %>
+<body>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h1 class="mb-4 text-center">Update About Your Place</h1>
+                <form class="newform needs-validation" novalidate action="/listing/<%= list._id %>?_method=PUT" method="post" enctype="multipart/form-data">
+                    <div class="form-group mb-3">
+                        <label for="title">Title:</label>
+                        <input type="text" class="form-control" name="listing[title]" id="title" value="<%= list.title %>" required>
+                        <div class="valid-feedback">Title looks awesome!!</div>
+                        <div class="invalid-feedback">Give a valid title!!</div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="description">Description:</label>
+                        <textarea class="form-control" name="listing[description]" id="description" required><%= list.description %></textarea>
+                        <div class="valid-feedback">Well described!!</div>
+                        <div class="invalid-feedback">Can't be empty</div>
+                    </div>
+                    <div class="mb-3">
+                        Original image: <br>
+                        <img src="<%= originalImage %>" alt="" class="img-thumbnail img-fluid" style="width: 200px; height: auto;">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="image">Upload new Image:</label>
+                        <input type="file" class="form-control" name="listing[image]" id="image" value="<%= list.image %>">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="price">Price:</label>
+                        <input type="number" class="form-control" name="listing[price]" id="price" value="<%= list.price %>" required>
+                        <div class="valid-feedback">It's affordable as per the services.</div>
+                        <div class="invalid-feedback">Price should be valid!!</div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="location">Location:</label>
+                        <input type="text" class="form-control" name="listing[location]" id="location" value="<%= list.location %>" required>
+                        <div class="valid-feedback">Located at a nice place!!</div>
+                        <div class="invalid-feedback">Location can't be empty!!</div>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="country">Country:</label>
+                        <input type="text" class="form-control" name="listing[country]" id="country" value="<%= list.country %>" required>
+                        <div class="valid-feedback">Nice!!</div>
+                        <div class="invalid-feedback">Can't be empty!!</div>
+                    </div>
+                    <!-- Category dropdown -->
+                    <div class="form-group mb-4">
+                        <label for="category">Category:</label>
+                        <select class="form-control" name="listing[category]" id="category" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="Homes">Homes</option>
+                            <option value="Restaurants">Restaurants</option>
+                            <option value="Nature">Nature</option>
+                            <option value="Wellness">Wellness</option>
+                            <option value="Adventure">Adventure</option>
+                            <option value="Art & Culture">Art & Culture</option>
+                            <option value="Cafes">Cafes</option>
+                            <option value="Gardens">Gardens</option>
+                            <option value="Monuments">Monuments</option>
+                            <option value="Historical Monument">Historical Monument</option>
+                            <option value="Cultural Site">Cultural Site</option>
+                            <option value="Modern Landmark">Modern Landmark</option>
+                            <option value="Natural Wonder">Natural Wonder</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="valid-feedback">Great choice!</div>
+                        <div class="invalid-feedback">Please select a category</div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary add-btn">Update Place</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
