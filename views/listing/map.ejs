@@ -385,24 +385,24 @@
                         if (!listing.geometry || !listing.geometry.coordinates) return null;
 
                         const [lng, lat] = listing.geometry.coordinates;
-                        console.log(listing.geometry.coordinates)
+                        // console.log(listing.geometry.coordinates)
                         var distance = await fetchDistanceMapbox(coordinates, [lng, lat]);
                         // console.log('Fetching distance for:', origin, deination);
                         if (distance === Infinity) {
                             distance=100000;
                         }
-                        console.log('Received distance:', distance);
+                        // console.log('Received distance:', distance);
                         return { distance, listing };
                     })
                 )
             )
                 .filter((item) => item && item.distance < 100000) // Customize threshold in meters
                 .sort((a, b) => a.distance - b.distance);
-            console.log(placesWithDistances);
+            // console.log(placesWithDistances);
             placesWithDistances.forEach(({ distance, listing }) => {
                 const card = document.createElement('div');
                 card.className = 'nearby-card';
-                console.log("inside this")
+                // console.log("inside this")
                 card.innerHTML = `
                     <img src="${listing.image.url}" alt="${listing.title}">
                     <h3>${listing.title}</h3>
@@ -434,7 +434,7 @@
 
             map.setCenter(userCoordinates);
             map.setZoom(13);
-            console.log('User coordinates:', userCoordinates);
+            // console.log('User coordinates:', userCoordinates);
 
             showNearbyPlaces(userCoordinates);
         },
