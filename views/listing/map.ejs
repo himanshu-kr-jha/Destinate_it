@@ -5,6 +5,11 @@
     <title>Map</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         /* Basic layout */
         body {
@@ -26,6 +31,7 @@
             width: 30%;
             max-width: 300px;
             padding: 10px;
+            padding-right: 10px;
             background-color: #f7f7f7;
             overflow-y: auto;
             transition: transform 0.3s ease;
@@ -68,6 +74,7 @@
 /* Nearby places styling */
 .nearby-card {
     margin-bottom: 15px; /* Space between cards */
+    /* margin-right: 15px; */
     padding: 15px; /* Increased padding for better spacing */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Slightly deeper shadow */
     border-radius: 10px; /* More rounded corners */
@@ -79,6 +86,7 @@
 .nearby-card:hover {
     transform: translateY(-2px); /* Lift effect on hover */
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+    text-decoration: none;
 }
 
 .nearby-card img {
@@ -159,7 +167,7 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            padding: 10px 20px;
+            padding: 20px 20px;
             background-color: #28a745;
             color: white;
             border: none;
@@ -173,7 +181,7 @@
     top: 15px;
     left: 15px;
     z-index: 1100;
-    background-color: transparent; /* Make the button background transparent */
+    background-color: #f7f7f7; /* Make the button background transparent */
     color: #333; /* Color of the hamburger icon */
     border: none;
     font-size: 24px; /* Size of the hamburger icon */
@@ -182,7 +190,7 @@
 }
 #sidebar {
     width: 30%;
-    max-width: 300px;
+    max-width: 400px;
     padding: 10px;
     background-color: #f7f7f7;
     overflow-y: auto;
@@ -198,7 +206,106 @@
 #sidebar.show {
     transform: translateX(0); /* Show sidebar */
 }
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%; /* Make sidebar wider on smaller screens */
+        height: 100%;
+        transform: translateX(-100%);
+        z-index: 1000;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+    }
 
+    #sidebar.show {
+        transform: translateX(0);
+    }
+
+    #toggle-sidebar {
+        display: block;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 1100;
+        background-color:wheat; /* Make the button background transparent */
+        color: #333; /* Color of the hamburger icon */
+        border: none;
+        font-size: 24px; /* Size of the hamburger icon */
+        cursor: pointer;
+        padding: 10px; /* Add some padding around the icon */
+    }
+    #nearby-list{
+        width: 100%;
+        padding-left: 30px;
+        padding-right: 30px;
+        padding-top: 30px;
+    }   
+    /* Nearby places styling */
+    .nearby-card {
+        margin-bottom: 15px;
+        padding: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        background-color: #fff;
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        width: 100%; /* Make the cards fill the available space */
+    }
+
+    .nearby-card img {
+        width: 100%; /* Full width for images */
+        height: 120px;
+        object-fit: cover;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .nearby-card h3 {
+        margin: 10px 0 5px;
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .nearby-card p {
+        margin: 0;
+        color: #666;
+        font-size: 0.9em;
+        line-height: 1.5;
+    }
+    .popup-card {
+        width: 80%; /* Make the popup cards larger */
+    }
+}
+#nearby-list{
+        width: 100%;
+        padding-left: 30px;
+        padding-right: 30px;
+        padding-top: 30px;
+    }
+@media (max-width: 400px) {
+    .popup-card img {
+        height: 80px;
+    }
+
+    .popup-card h3 {
+        font-size: 1rem;
+    }
+
+    .popup-card p {
+        font-size: 0.9rem;
+    }
+    #nearby-list{
+        width: 100%;
+        padding-left: 30px;
+        padding-right: 30px;
+        padding-top: 30px;
+    }
+}
+.nearby-card:hover{
+    text-decoration: none;
+}
     </style>
 </head>
 <body>
@@ -224,9 +331,9 @@
 
         var map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/outdoors-v12',
+            style: 'mapbox://styles/mapbox/navigation-night-v1',
             center: [78.00882, 27.17493],
-            zoom: 5
+            zoom: 12
         });
 
         var listings = <%- JSON.stringify(listings) %>;
@@ -242,6 +349,7 @@
                         <img src="${listing.image.url}" alt="${listing.title}">
                         <h3 class="pop-h3">${listing.title}</h3>        
                     </div>
+                </a>
                 `;
                 
                 const marker = new mapboxgl.Marker({ color: "red" })
@@ -253,41 +361,61 @@
                 marker.setPopup(popup);
             }
         });
-
-        function showNearbyPlaces(coordinates) {
+        async function fetchDistanceMapbox(origin, destination) {
+            try {
+                const response = await fetch(
+                    `https://api.mapbox.com/directions/v5/mapbox/driving/${origin[0]},${origin[1]};${destination[0]},${destination[1]}?access_token=${mapboxgl.accessToken}`
+                );
+                const data = await response.json();
+                if (data.routes && data.routes.length > 0) {
+                    return data.routes[0].distance; // Distance in meters
+                }
+                return Infinity; // Return a large number if no routes found
+            } catch (error) {
+                console.error('Error fetching distance from Mapbox:', error);
+                return Infinity;
+            }
+        }
+        async function showNearbyPlaces(coordinates) {
             const nearbyList = document.getElementById('nearby-list');
-            nearbyList.innerHTML = ''; // Clear any previous content
-            const placesWithDistances = listings
-                .filter(listing => listing.geometry && listing.geometry.coordinates)
-                .map(listing => {
-                    const [lng, lat] = listing.geometry.coordinates;
-                    const distance = Math.sqrt(
-                        Math.pow(coordinates[0] - lng, 2) + Math.pow(coordinates[1] - lat, 2)
-                    );
-                    return { distance, listing };
-                })
-                .filter(item => item.distance < 2) // Customize this threshold as needed
-                .sort((a, b) => a.distance - b.distance);
+            nearbyList.innerHTML = ''; // Clear previous content
+            const placesWithDistances = (
+                await Promise.all(
+                    listings.map(async (listing) => {
+                        if (!listing.geometry || !listing.geometry.coordinates) return null;
 
+                        const [lng, lat] = listing.geometry.coordinates;
+                        console.log(listing.geometry.coordinates)
+                        var distance = await fetchDistanceMapbox(coordinates, [lng, lat]);
+                        // console.log('Fetching distance for:', origin, deination);
+                        if (distance === Infinity) {
+                            distance=100000;
+                        }
+                        console.log('Received distance:', distance);
+                        return { distance, listing };
+                    })
+                )
+            )
+                .filter((item) => item && item.distance < 100000) // Customize threshold in meters
+                .sort((a, b) => a.distance - b.distance);
+            console.log(placesWithDistances);
             placesWithDistances.forEach(({ distance, listing }) => {
                 const card = document.createElement('div');
                 card.className = 'nearby-card';
-
+                console.log("inside this")
                 card.innerHTML = `
-                    <img src="${listing.image.url}"">
-                    <h3>${listing.title}</h3>                    
-                `;
+                    <img src="${listing.image.url}" alt="${listing.title}">
+                    <h3>${listing.title}</h3>
+                    <p><a class="pop-a" href="/listing/${listing._id}"><i class="fa-solid fa-location-dot" style="color: #fe424d;"></i></a>&nbsp;Distance: ${(distance / 1000).toFixed(2)} km</p>
+                    `;
 
                 card.addEventListener('click', () => {
                     const [lng, lat] = listing.geometry.coordinates;
                     map.flyTo({
                         center: [lng, lat],
-                        zoom: 12,
-                        essential: true // this animation is considered essential with respect to the user experience
+                        zoom: 16,
+                        essential: true
                     });
-
-                    // Save the current marker to allow for later detail access if needed
-                    currentMarker = listing;
                 });
 
                 nearbyList.appendChild(card);
@@ -305,7 +433,8 @@
                 .addTo(map);
 
             map.setCenter(userCoordinates);
-            map.setZoom(12);
+            map.setZoom(13);
+            console.log('User coordinates:', userCoordinates);
 
             showNearbyPlaces(userCoordinates);
         },
