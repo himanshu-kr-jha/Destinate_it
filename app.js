@@ -21,6 +21,7 @@ const ListingsRouter=require("./routes/listing.js");
 const ReviewsRouter=require("./routes/reviews.js");
 const UserRouter=require("./routes/user.js");
 const searchRouter = require('./routes/search'); // Adjust the path as necessary
+const mapRouter=require("./routes/map.js");
 
 // Set up EJS as the template engine
 // const dburl = "mongodb://127.0.0.1:27017/Madhuravas";
@@ -100,6 +101,7 @@ app.get("/terms",(req,res)=>{
 //search
 
 app.use('/', searchRouter);
+app.use('/map',mapRouter);
 
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page not found!!", 404));

@@ -36,6 +36,7 @@ const listingSchema = new Schema({
             required: true
         }
     },
+    views: { type: Number, default: 0 },
     category: {
         type: String,
         enum: [
@@ -56,6 +57,10 @@ const listingSchema = new Schema({
         ],
         required: false,
         default: "Other"
+    },
+    createdAt:{
+        type:Date,
+        default:Date.now()
     }
 });
 
