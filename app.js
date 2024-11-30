@@ -3,6 +3,7 @@ if(process.env.NODE_ENV!="production"){
 }
 const express = require("express");
 const app = express();
+const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require("path");
 const methodOverride = require("method-override");
@@ -48,6 +49,7 @@ const sessionOptions={
         httpOnly:true,
     },
 };
+app.use(cors());
 app.use(methodOverride("_method"));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
