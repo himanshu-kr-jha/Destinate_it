@@ -43,6 +43,12 @@
                         <div class="valid-feedback">Nice!!</div>
                         <div class="invalid-feedback">Can't be empty!!</div>
                     </div>
+                    <div class="form-group mb-3" style="display: none;">
+                        <label for="coordinates">Coordinates</label>
+                        <input type="text" class="form-control" name="listing[coordinates]" id="coordinates" value="<%= list.geometry.coordinates%>" required>
+                        <div class="valid-feedback">Located at a nice place!!</div>
+                        <div class="invalid-feedback">Location can't be empty!!</div>
+                    </div>
                     <!-- Category dropdown -->
                     <div class="form-group mb-4">
                         <label for="category">Category:</label>

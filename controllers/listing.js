@@ -3,22 +3,40 @@ const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapToken = process.env.MAP_API_KEY;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 module.exports.postListing = async (req, res, next) => {
-    let response = await geocodingClient.forwardGeocode({
-        query: req.body.listing.location,
-        limit: 1
-    })
-        .send();
     let url = req.file.path;
     let filename = req.file.filename;
+
+    // Check if coordinates are provided
+    let coordinates = req.body.listing.coordinates;
+    if (coordinates) {
+        // Split the coordinates if they are in "lat, lng" format
+        let [lat, lng] = coordinates.split(',').map(coord => parseFloat(coord.trim()));
+        
+        // Ensure lat and lng are valid numbers
+        if (!isNaN(lat) && !isNaN(lng)) {
+            req.body.listing.geometry = { type: 'Point', coordinates: [lng, lat] };
+        } else {
+            req.flash("error", "Invalid coordinates format.");
+            return res.redirect("/listing/new");
+        }
+    } else {
+        // If no coordinates provided, you could add a fallback or handle accordingly
+        req.flash("error", "Coordinates are required.");
+        return res.redirect("/listing/new");
+    }
+
+    // Create new listing
     let newList = new Listing(req.body.listing);
     newList.owner = req.user._id;
     newList.image = { url, filename };
-    newList.geometry = response.body.features[0].geometry
+
+    // Save the listing
     let savedlisting = await newList.save();
-    // console.log(savedlisting);
+
+    // Set success flash message and redirect
     req.flash("success", "New listing added");
     res.redirect("/listing");
-}
+};
 
 module.exports.getIndexListing = async (req, res) => {
     // let allListing = await Listing.find();
