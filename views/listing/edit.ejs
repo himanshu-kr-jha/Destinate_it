@@ -1,82 +1,288 @@
 <% layout("layouts/boilerplate") %>
-<body>
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <h1 class="mb-4 text-center">Update About Your Place</h1>
-                <form class="newform needs-validation" novalidate action="/listing/<%= list._id %>?_method=PUT" method="post" enctype="multipart/form-data">
-                    <div class="form-group mb-3">
-                        <label for="title">Title:</label>
-                        <input type="text" class="form-control" name="listing[title]" id="title" value="<%= list.title %>" required>
-                        <div class="valid-feedback">Title looks awesome!!</div>
-                        <div class="invalid-feedback">Give a valid title!!</div>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="description">Description:</label>
-                        <textarea class="form-control" name="listing[description]" id="description" required><%= list.description %></textarea>
-                        <div class="valid-feedback">Well described!!</div>
-                        <div class="invalid-feedback">Can't be empty</div>
-                    </div>
-                    <div class="mb-3">
-                        Original image: <br>
-                        <img src="<%= originalImage %>" alt="" class="img-thumbnail img-fluid" style="width: 200px; height: auto;">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="image">Upload new Image:</label>
-                        <input type="file" class="form-control" name="listing[image]" id="image" value="<%= list.image %>">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="price">Price:</label>
-                        <input type="number" class="form-control" name="listing[price]" id="price" value="<%= list.price %>" required>
-                        <div class="valid-feedback">It's affordable as per the services.</div>
-                        <div class="invalid-feedback">Price should be valid!!</div>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="location">Location:</label>
-                        <input type="text" class="form-control" name="listing[location]" id="location" value="<%= list.location %>" required>
-                        <div class="valid-feedback">Located at a nice place!!</div>
-                        <div class="invalid-feedback">Location can't be empty!!</div>
-                    </div>
-                    <div class="form-group mb-4">
-                        <label for="country">Country:</label>
-                        <input type="text" class="form-control" name="listing[country]" id="country" value="<%= list.country %>" required>
-                        <div class="valid-feedback">Nice!!</div>
-                        <div class="invalid-feedback">Can't be empty!!</div>
-                    </div>
-                    <div class="form-group mb-3" style="display: none;">
-                        <label for="coordinates">Coordinates</label>
-                        <input type="text" class="form-control" name="listing[coordinates]" id="coordinates" value="<%= list.geometry.coordinates%>" required>
-                        <div class="valid-feedback">Located at a nice place!!</div>
-                        <div class="invalid-feedback">Location can't be empty!!</div>
-                    </div>
-                    <!-- Category dropdown -->
-                    <div class="form-group mb-4">
-                        <label for="category">Category:</label>
-                        <select class="form-control" name="listing[category]" id="category" required>
-                            <option value="" disabled selected>Select a category</option>
-                            <option value="Homes">Homes</option>
-                            <option value="Restaurants">Restaurants</option>
-                            <option value="Nature">Nature</option>
-                            <option value="Wellness">Wellness</option>
-                            <option value="Adventure">Adventure</option>
-                            <option value="Art & Culture">Art & Culture</option>
-                            <option value="Cafes">Cafes</option>
-                            <option value="Gardens">Gardens</option>
-                            <option value="Monuments">Monuments</option>
-                            <option value="Historical Monument">Historical Monument</option>
-                            <option value="Cultural Site">Cultural Site</option>
-                            <option value="Modern Landmark">Modern Landmark</option>
-                            <option value="Natural Wonder">Natural Wonder</option>
-                            <option value="Other">Other</option>
-                        </select>
-                        <div class="valid-feedback">Great choice!</div>
-                        <div class="invalid-feedback">Please select a category</div>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary add-btn">Update Place</button>
-                    </div>
-                </form>
+
+    <style>
+        /* Locate field container styling */
+        .locate-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Label styling */
+        .locate-container label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            color: #495057;
+        }
+
+        /* Button styling */
+        .locate-container .btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: #fe424d;
+            /* Info color */
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            #map-container {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #map-container {
+                height: 200px;
+            }
+        }
+
+        /* Hover effect for the button */
+        .locate-container .btn:hover {
+            background-color: #138496;
+            /* Darker info color */
+        }
+
+        /* Icon styling */
+        .locate-container .btn i {
+            font-size: 1.2rem;
+        }
+
+        #map-container {
+            width: 100%;
+            /* Make the map container take up full width */
+            height: 400px;
+            /* Adjust height as per your preference */
+            max-width: 600px;
+            /* Optional: Restrict max width for better alignment */
+            margin: 0 auto;
+            /* Center the map container */
+            border: 1px solid #ddd;
+            /* Optional: Add a border for styling */
+            border-radius: 8px;
+            /* Optional: Rounded corners */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            /* Optional: Add shadow for better visual */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .locate-container .btn {
+                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+    </style>
+
+    <body>
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h1 class="mb-4 text-center">Update About Your Place</h1>
+                    <form class="newform needs-validation" novalidate action="/listing/<%= list._id %>?_method=PUT"
+                        method="post" enctype="multipart/form-data">
+                        <div class="form-group mb-3">
+                            <label for="title">Title:</label>
+                            <input type="text" class="form-control" name="listing[title]" id="title"
+                                value="<%= list.title %>" required>
+                            <div class="valid-feedback">Title looks awesome!!</div>
+                            <div class="invalid-feedback">Give a valid title!!</div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="description">Description:</label>
+                            <textarea class="form-control" name="listing[description]" id="description"
+                                required><%= list.description %></textarea>
+                            <div class="valid-feedback">Well described!!</div>
+                            <div class="invalid-feedback">Can't be empty</div>
+                        </div>
+                        <div class="mb-3">
+                            Original image: <br>
+                            <img src="<%= originalImage %>" alt="" class="img-thumbnail img-fluid"
+                                style="width: 200px; height: auto;">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="image">Upload new Image:</label>
+                            <input type="file" class="form-control" name="listing[image]" id="image"
+                                value="<%= list.image %>">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="price">Price:</label>
+                            <input type="number" class="form-control" name="listing[price]" id="price"
+                                value="<%= list.price %>" required>
+                            <div class="valid-feedback">It's affordable as per the services.</div>
+                            <div class="invalid-feedback">Price should be valid!!</div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="location">Location:</label>
+                            <input type="text" class="form-control" name="listing[location]" id="location"
+                                value="<%= list.location %>" required>
+                            <div class="valid-feedback">Located at a nice place!!</div>
+                            <div class="invalid-feedback">Location can't be empty!!</div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="country">Country:</label>
+                            <input type="text" class="form-control" name="listing[country]" id="country"
+                                value="<%= list.country %>" required>
+                            <div class="valid-feedback">Nice!!</div>
+                            <div class="invalid-feedback">Can't be empty!!</div>
+                        </div>
+                        <div class="form-group locate-container">
+                            <label for="location">Locate:</label>
+                            <button type="button" class="btn" id="setlocbtn" data-toggle="modal"
+                                data-target="#locationModal">
+                                <i class="fas fa-map-marker-alt"></i> Set Location on Map
+                            </button>
+                        </div>
+                        <div class="form-group mb-3" style="display: none;">
+                            <label for="coordinates">Coordinates</label>
+                            <input type="text" class="form-control" name="listing[coordinates]" id="coordinates"
+                                value="<%= list.geometry.coordinates%>" required>
+                            <div class="valid-feedback">Located at a nice place!!</div>
+                            <div class="invalid-feedback">Location can't be empty!!</div>
+                        </div>
+                        <!-- Category dropdown -->
+                        <div class="form-group mb-4">
+                            <label for="category">Category:</label>
+                            <select class="form-control" name="listing[category]" id="category" required>
+                                <option value="" disabled selected>Select a category</option>
+                                <option value="Homes">Homes</option>
+                                <option value="Restaurants">Restaurants</option>
+                                <option value="Nature">Nature</option>
+                                <option value="Wellness">Wellness</option>
+                                <option value="Adventure">Adventure</option>
+                                <option value="Art & Culture">Art & Culture</option>
+                                <option value="Cafes">Cafes</option>
+                                <option value="Gardens">Gardens</option>
+                                <option value="Monuments">Monuments</option>
+                                <option value="Historical Monument">Historical Monument</option>
+                                <option value="Cultural Site">Cultural Site</option>
+                                <option value="Modern Landmark">Modern Landmark</option>
+                                <option value="Natural Wonder">Natural Wonder</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <div class="valid-feedback">Great choice!</div>
+                            <div class="invalid-feedback">Please select a category</div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary add-btn">Update Place</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-</body>
+
+
+        <!-- Modal for Map Location -->
+        <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="locationModalLabel">Set Location on Map</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="map-container" style="height: 400px;"></div>
+                        <div class="text-center mt-2">
+                            <button type="button" class="btn btn-secondary"
+                                style="background-color: #fe424d !important;" id="use-current-location">Use Current
+                                Location</button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                        <button type="button" class="btn btn-primary" id="save-location"
+                            style="background-color: #fe424d!important;" data-dismiss="modal">Save Location</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mapbox JS and CSS -->
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet" />
+        <script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
+
+        <script>
+
+            mapboxgl.accessToken = "<%= process.env.MAP_API_KEY %>";  // Replace with your Mapbox Access Token
+            let map;
+            let marker;
+            let lat = "<%=list.geometry.coordinates[1] %>";
+            let lng = "<%=list.geometry.coordinates[0] %>";
+            console.log(lat, lng);
+            let latLng = { lat: lat, lng: lng };  // Default to India
+
+            // Initialize Mapbox Map
+            function initMap() {
+                map = new mapboxgl.Map({
+                    container: 'map-container',
+                    style: 'mapbox://styles/mapbox/streets-v11',  // You can change the map style if needed
+                    center: [latLng.lng, latLng.lat],  // Default location
+                    zoom: 5
+                });
+
+                // Add a marker to the map
+                marker = new mapboxgl.Marker({ draggable: true })
+                    .setLngLat([latLng.lng, latLng.lat])
+                    .addTo(map);
+
+                // Update the location input when the marker is dragged
+                marker.on('dragend', function () {
+                    const lngLat = marker.getLngLat();
+                    latLng = lngLat;  // Update latLng
+                });
+
+                // Set location via map click
+                map.on('click', function (e) {
+                    const lngLat = e.lngLat;
+                    marker.setLngLat(lngLat);
+                    latLng = lngLat;  // Update latLng
+                });
+            }
+
+            // Use current location button
+            document.getElementById('use-current-location').addEventListener('click', function () {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        const lngLat = new mapboxgl.LngLat(lng, lat);
+
+                        map.setCenter(lngLat);
+                        marker.setLngLat(lngLat);
+                        latLng = lngLat;  // Update latLng
+                    }, function () {
+                        alert("Unable to retrieve your location.");
+                    });
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
+            });
+
+            // Save location to input field when the "Save Location" button is clicked
+            document.getElementById('save-location').addEventListener('click', function () {
+                const locationInput = document.getElementById('coordinates');
+                locationInput.value = `${latLng.lat}, ${latLng.lng}`;
+                const locbtn = document.getElementById('setlocbtn');
+                locbtn.innerText = `Location has been saved`;
+                locbtn.style.backgroundColor = "green";
+                locbtn.style.color = "white";
+                locbtn.style.border = "none";
+
+                // Optional: Add a slight animation for better UX
+                locbtn.style.transition = "all 0.3s ease-in-out";
+            });
+
+            // Initialize map when the page loads
+            window.onload = initMap;
+        </script>
+    </body>
