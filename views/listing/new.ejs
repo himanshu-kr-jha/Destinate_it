@@ -191,14 +191,14 @@
                     <div class="modal-body">
                         <div id="map-container" style="height: 400px;"></div>
                         <div class="text-center mt-2">
-                            <button type="button" class="btn btn-secondary" style="background-color: #fe424d;!important"
+                            <button type="button" class="btn btn-secondary" style="background-color: #fe424d!important;"
                                 id="use-current-location">Use Current Location</button>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
                         <button type="button" class="btn btn-primary" id="save-location"
-                            style="background-color: #fe424d;!important" data-dismiss="modal">Save Location</button>
+                            style="background-color: #fe424d!important;" data-dismiss="modal">Save Location</button>
                     </div>
                 </div>
             </div>
@@ -274,18 +274,6 @@
 
                 // Optional: Add a slight animation for better UX
                 locbtn.style.transition = "all 0.3s ease-in-out";
-
-                // Disable the button to prevent multiple clicks
-                // locbtn.disabled = true;
-
-                // Optional: Reset button after a few seconds if needed
-                // setTimeout(() => {
-                //     locbtn.innerText = "Set Location";
-                //     locbtn.style.backgroundColor = "";
-                //     locbtn.style.color = "";
-                //     locbtn.style.border = "";
-                //     locbtn.disabled = false;
-                // }, 5000); // Reset after 5 seconds
             });
 
             // Initialize map when the page loads

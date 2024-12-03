@@ -1,5 +1,7 @@
 const Listing = require("../models/listing.js");
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const review = require("../models/review.js");
+const User = require("../models/user.js");
 const mapToken = process.env.MAP_API_KEY;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 module.exports.postListing = async (req, res, next) => {
@@ -40,12 +42,14 @@ module.exports.postListing = async (req, res, next) => {
 
 module.exports.getIndexListing = async (req, res) => {
     // let allListing = await Listing.find();
+    const currUser = req.session.userId; // Replace with your current user logic
+
     const page = parseInt(req.query.page) || 1; // Current page number
     const limit = 3; // Number of listings per page
     const offset = (page - 1) * limit; // Offset for the current page
     const totalCount = await Listing.countDocuments(); // Total number of listings
     const totalPages = Math.ceil(totalCount / limit); // Total pages
-    const lists = await Listing.find().sort({ createdAt: -1 })
+    const lists = await Listing.find().sort({ views:-1,createdAt:-1 })
     .skip(offset).limit(limit); // Fetch listings for current page
     res.render('listing/index.ejs', { lists, paginatedLists: lists, currentPage: page, totalPages });
 
@@ -154,3 +158,52 @@ module.exports.destroyListing = async (req, res) => {
     req.flash("success", "Listing deleted.");
     res.redirect("/listing");
 }
+
+module.exports.likelisting = async (req, res) => {
+    if (!req.user) {
+    req.flash("error", "You must be logged in to like items.");
+    return res.redirect("/user/login");
+  }
+    let userId= req.user._id;
+    let listingId=req.params.id
+    try {
+        // Find the user in the database
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        // Find the listing in the database
+        const listing = await Listing.findById(listingId);
+
+        if (!listing) {
+            return res.status(404).json({ success: false, message: 'Listing not found' });
+        }
+
+        // Update the user's liked listings
+            // If liked, add the listing to the user's liked listings
+            if (!user.likes.includes(listingId)) {
+                // Add to likes if not already liked
+                user.likes.push(listingId);
+                listing.likes.push(userId);
+                await user.save();
+                await listing.save();
+                console.log("Like added successfully");
+              } else {
+                // If already liked, remove the like
+                user.likes = user.likes.filter(id => id.toString() !== listingId.toString());
+                listing.likes = listing.likes.filter(id => id.toString() !== userId.toString());
+              
+                await Promise.all([user.save(), listing.save()]); // Save both updates concurrently
+                console.log("Like removed successfully");
+              }
+              
+        const referer = req.get('Referer');
+        res.redirect(referer);
+        
+    } catch (error) {
+        console.error(error);
+        // res.status(500).json({ success: false, message: 'Server error' });
+    }
+};

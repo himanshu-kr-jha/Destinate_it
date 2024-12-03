@@ -69,14 +69,19 @@
     /* Styling for views icon */
 .icon-eye {
     color: #007bff; /* Blue color for the eye icon */
-    font-size: 18px; /* Set icon size */
+    font-size: 1,3rem; /* Set icon size */
     margin-right: 8px; /* Add space between icon and text */
+    margin-left: 12px; /* Add space between icon and text */
 }
-
+.fa-heart{
+    color: #fe424d;
+    font-size: 1.3rem;
+    margin-right:8px;
+}
 /* Styling for comment icon */
 .icon-comment {
     color: #28a745; /* Green color for the comment icon */
-    font-size: 18px; /* Set icon size */
+    font-size: 1.3rem; /* Set icon size */
     margin-left: 12px; /* Add space between icon and text */
     margin-right: 8px;
 }
@@ -110,6 +115,7 @@
                 </div>
                 <div class="card-body">
                     <p>
+                        <i class="fa fa-heart"></i> <%=list.likes.length%>
                         <i class="fas fa-eye icon-eye"></i> <%= list.views %>
                         <a href="#reviews"><i class="fas fa-comment icon-comment"></i><%= list.reviews.length %></a>
                     </p>
@@ -119,6 +125,7 @@
                     <p class="card-text"><%= list.description %> <br><br></p>
                     <p class="card-text"><b><span style="color: #222222;">&#8377; <%= list.price.toLocaleString("en-IN") %></span></b><br></p>
                     <p class="card-text"><%= list.location %>, <%= list.country %><br></p>
+                    <p><%=list.likes.length%></p>
                 </div>
             </div>
         </div>

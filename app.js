@@ -23,6 +23,7 @@ const ReviewsRouter=require("./routes/reviews.js");
 const UserRouter=require("./routes/user.js");
 const searchRouter = require('./routes/search'); // Adjust the path as necessary
 const mapRouter=require("./routes/map.js");
+const LikeRouter=require("./routes/like.js");
 
 // Set up EJS as the template engine
 // const dburl = "mongodb://127.0.0.1:27017/Madhuravas";
@@ -84,10 +85,13 @@ app.use((req,res,next)=>{
     next();
 });
 
+// app.use("/liked",likedRouter);
 //listings
+app.use("/like",LikeRouter);
 app.use("/listing",ListingsRouter);
 // reviews.
 app.use("/listing/:id/reviews",ReviewsRouter);
+// app.use("/listing")
 
 //search
 

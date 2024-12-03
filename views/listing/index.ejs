@@ -1,172 +1,233 @@
 <% layout("layouts/boilerplate") %>
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-<body>
-    <span class="include"><%- include("../includes/category.ejs") %></span>
-    
-    <div class="row row-cards row-cols-lg-3 row-cols-md-2 row-cols-lg-1 mb-3 mt-3">
-        <% for(let data of paginatedLists) { %>
-            <a href="/listing/<%= data._id %>" style="text-decoration: none;">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <body>
+        <span class="include"><%- include("../includes/category.ejs") %></span>
+
+        <div class="row row-cards row-cols-lg-3 row-cols-md-2 row-cols-lg-1 mb-3 mt-3">
+            <% for (let data of paginatedLists) { %>
+              <a href="/listing/<%= data._id %>" style="text-decoration: none;">
                 <div class="card-list cols" style="width: 20rem">
-                    <img class="card-img-top-list" src="<%= data.image.url %>" alt="Card image cap" style="height: 20rem"/>
-                    <div class="card-img-overlay-list"></div>
-                    <div class="card-body-list">
-                        <p class="card-text-list">
-                            <b><%= data.title %></b>
-                            <br>
-                            &#8377; <%= data.price.toLocaleString("en-IN") %>
-                            <br>
-                            <span class="text-muted"><%= data.category %></span> <!-- Category Info -->
-                        </p>
-                    </div>
+                  <img class="card-img-top-list" src="<%= data.image.url %>" alt="Card image cap" style="height: 20rem" />
+                  <div class="card-img-overlay-list"></div>
+                  <div class="card-body-list">
+                    <p class="card-text-list">
+                      <b><%= data.title %></b><br>
+                      &#8377; <%= data.price.toLocaleString("en-IN") %><br>
+                      <span class="text-muted"><%= data.category %></span>
+                    </p>
+                  </a>
+                  <!-- Like Button -->
+                  <form action="/like/<%= data._id %>/liked" method="post">
+                    <button class="like-btn">
+                      <% if (currUser && data.likes && data.likes.includes(currUser._id)) { %>
+                        <i class="fa fa-heart liked"></i> <%if(data.likes.length>0){%>
+                            <%=data.likes.length%>
+                        <%}else{%>
+
+                        <%}%>
+                      <% } else { %>
+                        <i class="fa fa-heart"></i> <%if(data.likes.length>0){%>
+                            <%=data.likes.length%>
+                        <%}else{%>
+
+                        <%}%>
+                      <% } %>
+                    </button>
+                  </form>
+                  
                 </div>
-            </a>
-        <% } %>
-    </div>
-    
-    <div class="pagination d-flex justify-content-center mt-4">
-        <!-- First Page Button -->
-        <% if (currentPage > 1) { %>
-            <a href="?page=1" class="btn me-2" role="button"><<</a>
-        <% } else { %>
-            <button class="btn me-2" disabled><<</button>
-        <% } %>
-    
-        <!-- Previous Page Button -->
-        <% if (currentPage > 1) { %>
-            <a href="?page=<%= currentPage - 1 %>" class="btn me-2" role="button"><i class="fas fa-arrow-left"></i></a>
-        <% } else { %>
-            <button class="btn me-2" disabled><i class="fas fa-arrow-left"></i></button>
-        <% } %>
-    
-        <!-- Page Numbers -->
-        <% 
-            let startPage = Math.max(1, currentPage - 1); // Show previous page if it exists
-            let endPage = Math.min(totalPages, currentPage + 1); // Show next page if it exists
-        %>
-    
-        <% for (let i = startPage; i <= endPage; i++) { %>
-            <% if (i === currentPage) { %>
-                <button class="btn me-2" disabled><%= i %></button>
-            <% } else { %>
-                <a href="?page=<%= i %>" class="btn me-2" role="button"><%= i %></a>
+              </div>
             <% } %>
-        <% } %>
-    
-        <!-- Next Page Button -->
-        <% if (currentPage < totalPages) { %>
-            <a href="?page=<%= currentPage + 1 %>" class="btn me-2" role="button"><i class="fas fa-arrow-right"></i></a>
-        <% } else { %>
-            <button class="btn me-2" disabled><i class="fas fa-arrow-right"></i></button>
-        <% } %>
-    
-        <!-- Last Page Button -->
-        <% if (currentPage < totalPages) { %>
-            <a href="?page=<%= totalPages %>" class="btn me-2" role="button">>></a>
-        <% } else { %>
-            <button class="btn me-2" disabled>>></button>
-        <% } %>
-    </div>
-    
-    
-    
-
-    <style>
-        #filters {
-            margin-top: 1rem;
-        }
-        .filter {
-            text-align: center;
-            margin: 0.5rem;
-            opacity: 0.6;
-            transition: opacity 0.3s ease;
-            padding: 0 1rem;
-        }
-        .filter:hover {
-            opacity: 1;
-            cursor: pointer;
-        }
-        .filter p {
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-    .pagination {
-        margin: 1rem 0;
-    }
-
-    .pagination .btn {
-        padding: 5px 15px;
-        font-size: 1rem;
-    }
-
-    .pagination .btn-primary {
-        background-color: white; /* Background for normal buttons */
-        color: #fe424d;          /* Text color */
-        /* border: 1px solid #fe424d; Thin border */
-    }
-
-    .pagination .btn:disabled {
-        background-color: white; /* Background for disabled buttons */
-        border: none;            /* No border */
-    }
-
-    .pagination .btn {
-        /* border-color: #fe424d;   Thin border for outline buttons */
-        color: #fe424d;          /* Text color */
-    }
-
-    .pagination .btn:hover {
-        background-color: #fe424d; /* Background on hover */
-        color: white;               /* Text color on hover */
-    }
-
-    /* Style for the currently selected page */
-    .pagination .btn.selected {
-        background-color: #fe424d; /* Background for selected page */
-        color: white;               /* Text color for selected page */
-        border: 1px solid #fe424d;  /* Thin border for selected page */
-    }
-
-    
-        .navbar {
-            background-color: white !important;
-        }
-        @media (min-width: 992px) {
-            .filter {
-                flex: 1 1 calc(10% - 2rem);
-                max-width: calc(10% - 2rem);
-            }
-        }
-        @media (max-width: 991.98px) and (min-width: 768px) {
-            .filter {
-                flex: 1 1 calc(20% - 2rem);
-                max-width: calc(20% - 2rem);
-            }
-            /* .include{
-                display: none;
-                opacity: 0;
-                width: 0;
-            } */
-        }
-        @media (max-width: 767.98px) {
-            .filter {
-                flex: 1 1 calc(33.333% - 2rem);
-                max-width: calc(33.333% - 2rem);
-            }
-            /* .include{
-                display: none;
-                opacity: 0;
-                width: 0;
-            } */
+          </div>
+          
+          
+            <div class="pagination d-flex justify-content-center mt-4">
+                <!-- First Page Button -->
+                <% if (currentPage > 1) { %>
+                    <a href="?page=1" class="btn me-2" role="button"><<</a>
+                <% } else { %>
+                    <button class="btn me-2" disabled><<</button>
+                <% } %>
             
-        }
-        @media (max-width: 575.98px) {
-            .filter {
-                flex: 1 1 100%;
-                max-width: 100%;
+                <!-- Previous Page Button -->
+                <% if (currentPage > 1) { %>
+                    <a href="?page=<%= currentPage - 1 %>" class="btn me-2" role="button"><i class="fas fa-arrow-left"></i></a>
+                <% } else { %>
+                    <button class="btn me-2" disabled><i class="fas fa-arrow-left"></i></button>
+                <% } %>
+            
+                <!-- Page Numbers -->
+                <% let startPage = Math.max(1, currentPage - 1); %>
+                <% let endPage = Math.min(totalPages, currentPage + 1); %>
+                <% for (let i = startPage; i <= endPage; i++) { %>
+                    <% if (i === currentPage) { %>
+                        <button class="btn me-2" disabled><%= i %></button>
+                    <% } else { %>
+                        <a href="?page=<%= i %>" class="btn me-2" role="button"><%= i %></a>
+                    <% } %>
+                <% } %>
+            
+                <!-- Next Page Button -->
+                <% if (currentPage < totalPages) { %>
+                    <a href="?page=<%= currentPage + 1 %>" class="btn me-2" role="button"><i class="fas fa-arrow-right"></i></a>
+                <% } else { %>
+                    <button class="btn me-2" disabled><i class="fas fa-arrow-right"></i></button>
+                <% } %>
+            
+                <!-- Last Page Button -->
+                <% if (currentPage < totalPages) { %>
+                    <a href="?page=<%= totalPages %>" class="btn me-2" role="button">>></a>
+                <% } else { %>
+                    <button class="btn me-2" disabled>>></button>
+                <% } %>
+            </div>
+            <style>
+                .like-btn {
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    /* font-size: 1.5rem; */
+                    /* color: red; */
+                    /* Default color */
+                    position: absolute;
+                    bottom: 10px;
+                    /* left: 10px; */
+                    right: 10px;
+                    z-index: 10;
+                    /* Ensures it's above the content */
+                }
+
+                .like-btn i {
+                    transition: color 0.3s ease;
+                }
+                .fa-heart {
+                    font-size: 1.5rem;
+  color: grey;
+  transition: color 0.3s;
+}
+
+.fa-heart.liked {
+    font-size: 1.5rem;
+  color: red;
+}
+
+                .card-list {
+                    position: relative;
+                    /* Ensures the card body is positioned correctly */
+                }
+
+                #filters {
+                    margin-top: 1rem;
+                }
+
+                .filter {
+                    text-align: center;
+                    margin: 0.5rem;
+                    opacity: 0.6;
+                    transition: opacity 0.3s ease;
+                    padding: 0 1rem;
+                }
+
+                .filter:hover {
+                    opacity: 1;
+                    cursor: pointer;
+                }
+                .filter p {
+                    margin-top: 0.5rem;
+                    font-size: 0.9rem;
+                }
+
+                .pagination {
+                    margin: 1rem 0;
+                }
+
+                .pagination .btn {
+                    padding: 5px 15px;
+                    font-size: 1rem;
+                }
+
+                .pagination .btn-primary {
+                    background-color: white;
+                    /* Background for normal buttons */
+                    color: #fe424d;
+                    /* Text color */
+                    /* border: 1px solid #fe424d; Thin border */
+                }
+
+                .pagination .btn:disabled {
+                    background-color: white;
+                    /* Background for disabled buttons */
+                    border: none;
+                    /* No border */
+                }
+
+                .pagination .btn {
+                    /* border-color: #fe424d;   Thin border for outline buttons */
+                    color: #fe424d;
+                    /* Text color */
+                }
+
+                .pagination .btn:hover {
+                    background-color: #fe424d;
+                    /* Background on hover */
+                    color: white;
+                    /* Text color on hover */
+                }
+
+                /* Style for the currently selected page */
+                .pagination .btn.selected {
+                    background-color: #fe424d;
+                    /* Background for selected page */
+                    color: white;
+                    /* Text color for selected page */
+                    border: 1px solid #fe424d;
+                    /* Thin border for selected page */
+                }
+
+
+                .navbar {
+                    background-color: white !important;
+                }
+
+                @media (min-width: 992px) {
+                    .filter {
+                        flex: 1 1 calc(10% - 2rem);
+                        max-width: calc(10% - 2rem);
+                    }
+                }
+
+                @media (max-width: 991.98px) and (min-width: 768px) {
+                    .filter {
+                        flex: 1 1 calc(20% - 2rem);
+                        max-width: calc(20% - 2rem);
+                    }
+                }
+
+                @media (max-width: 767.98px) {
+                    .filter {
+                        flex: 1 1 calc(33.333% - 2rem);
+                        max-width: calc(33.333% - 2rem);
+                    }
+                }
+
+                @media (max-width: 575.98px) {
+                    .filter {
+                        flex: 1 1 100%;
+                        max-width: 100%;
+                    }
+                }
+            </style>
+            <script>
+            function toggleLike(button, userId) {
+  // Check if the user is logged in
+  if (!userId) {
+    // Redirect to login if user is not logged in
+    window.location.href = "/user/login";
+    return;
+  }
             }
-        }
-    </style>
-    
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-</body>
+            </script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    </body>
