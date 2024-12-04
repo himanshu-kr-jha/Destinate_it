@@ -103,7 +103,27 @@ module.exports.editListing = async (req, res) => {
 
 module.exports.puteditListing = async (req, res) => {
     let { id } = req.params;
-    let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing }, { new: true }).catch((err) => {
+    let coordinates = req.body.listing.coordinates;
+    if (coordinates) {
+        // Split the coordinates if they are in "lat, lng" format
+        let [lat, lng] = coordinates.split(',').map(coord => parseFloat(coord.trim()));
+        
+        // Ensure lat and lng are valid numbers
+        if (!isNaN(lat) && !isNaN(lng)) {
+            req.body.listing.geometry = { type: 'Point', coordinates: [lng, lat] };
+        } else {
+            req.flash("error", "Invalid coordinates format.");
+            return res.redirect("/listing/new");
+        }
+    } else {
+        // If no coordinates provided, you could add a fallback or handle accordingly
+        req.flash("error", "Coordinates are required.");
+        return res.redirect("/listing/new");
+    }
+    const listing = await Listing.findByIdAndUpdate(id, { 
+        ...req.body.listing, 
+        geometry: req.body.listing.geometry // Explicitly update geometry
+    }, { new: true }).catch((err) => {
         console.log(err);
     });
     if (typeof req.file != "undefined") {
@@ -189,14 +209,14 @@ module.exports.likelisting = async (req, res) => {
                 listing.likes.push(userId);
                 await user.save();
                 await listing.save();
-                console.log("Like added successfully");
+                // console.log("Like added successfully");
               } else {
                 // If already liked, remove the like
                 user.likes = user.likes.filter(id => id.toString() !== listingId.toString());
                 listing.likes = listing.likes.filter(id => id.toString() !== userId.toString());
               
                 await Promise.all([user.save(), listing.save()]); // Save both updates concurrently
-                console.log("Like removed successfully");
+                // console.log("Like removed successfully");
               }
               
         const referer = req.get('Referer');
