@@ -100,15 +100,7 @@ crossorigin="anonymous"></script>
                     background: none;
                     border: none;
                     cursor: pointer;
-                    /* font-size: 1.5rem; */
-                    /* color: red; */
-                    /* Default color */
-                    /* position: absolute; */
-                    /* bottom: 10px; */
-                    /* left: 10px; */
-                    /* right: 10px; */
                     z-index: 10;
-                    /* Ensures it's above the content */
                 }
 
                 .like-btn i {
@@ -124,6 +116,60 @@ crossorigin="anonymous"></script>
     font-size: 1.5rem;
   color: red;
 }
+ /* Modal container */
+ .modal-content {
+        background-color: #ffffff; /* White background for the modal */
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    }
+
+    /* Modal header */
+    .modal-header {
+        background-color: #f8f9fa; /* Light background to match site */
+        border-bottom: 1px solid #e9ecef; /* Light border */
+        color: #212529; /* Dark text color */
+    }
+
+    .modal-title {
+        font-weight: bold;
+    }
+
+    /* Modal close button */
+    .close {
+        color: #212529; /* Dark color for close button */
+        font-size: 1.5rem;
+        opacity: 1;
+    }
+
+    .close:hover, .close:focus {
+        color: #fe424d; /* Change to site accent color on hover */
+    }
+
+    /* Modal body */
+    .modal-body {
+        text-align: center;
+        padding: 20px;
+    }
+
+    /* Image inside the modal */
+    .modal-body img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        border-radius: 10px; /* Round corners for the image */
+    }
+/* Initial zoomed-out state */
+.show-img {
+    transform: scale(0.8);
+    transition: transform 0.5s ease-out; /* Smooth transition */
+}
+
+/* On page load, the image will gradually zoom to its normal size */
+.show-img.zoom-in {
+    transform: scale(1);
+}
+
 </style>
 <script>
     const maptoken = "<%=process.env.MAP_API_KEY%>";
@@ -141,8 +187,26 @@ crossorigin="anonymous"></script>
         <div class="row mt-3 justify-content-center">
             <div class="card col-md-8 col-lg-6 show-card">
                 <div class="image-container">
-                    <img class="card-img-top img-fluid show-img" src="<%= list.image.url %>" alt="Card image cap">
+                    <img class="card-img-top img-fluid show-img" src="<%= list.image.url %>" alt="Card image cap" data-toggle="modal" data-target="#imageModal">
                 </div>
+                
+                
+                <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="imageModalLabel"><%= list.title %></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img src="<%= list.image.url %>" class="img-fluid" alt="Full view of image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="card-body">
                     <p>
                         <form action="/like/<%= list._id %>/liked" method="post">
@@ -169,7 +233,6 @@ crossorigin="anonymous"></script>
                     <p class="card-text"><%= list.description %> <br><br></p>
                     <p class="card-text"><b><span style="color: #222222;">&#8377; <%= list.price.toLocaleString("en-IN") %></span></b><br></p>
                     <p class="card-text"><%= list.location %>, <%= list.country %><br></p>
-                    <p><%=list.likes.length%></p>
                 </div>
             </div>
         </div>
@@ -259,5 +322,10 @@ crossorigin="anonymous"></script>
                 document.getElementById("deleteForm").submit();
             }
         }
+
+        window.addEventListener('load', function() {
+    const image = document.querySelector('.show-img');
+    image.classList.add('zoom-in');
+});
     </script>
 </body>

@@ -6,23 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Destinate it</title>
     <link rel="stylesheet" href="/css/style.css">
-    <!-- <link rel="icon" href="/css/pine-tree.png" type="image/png"> -->
     <link rel="icon" href="/homepage.png" type="image/png">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/css/rating.css">
-    <!-- Bootstrap JS (ensure this is included) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet" />
 </head>
+
 <style>
     /* Overlay covering the entire page */
     #spinner-overlay {
@@ -66,50 +64,46 @@
 
 <body>
     <%- include("../includes/navbar.ejs") %>
-    <div id="spinner-overlay">
+    <div id="spinner-overlay" class="hidden">
         <div class="spinner"></div>
     </div>
-    
-        <% if (success || error) { %>
-            <div class="container">
-                <%- include("../includes/flash.ejs") %>
-                <%- body %>
-            </div>
-        <% } %>
-        <%- include("../includes/footer.ejs") %>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"></script>
-            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        <script src="/js/script.js"></script>
-        <script src="/js/map.js"></script>
+
+    <% if (success || error) { %>
+    <div class="container">
+        <%- include("../includes/flash.ejs") %>
+        <%- body %>
+    </div>
+    <% } %>
+    <%- include("../includes/footer.ejs") %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/map.js"></script>
+
+    <script>
+        // Show the spinner when a link is clicked
+        document.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                document.getElementById('spinner-overlay').classList.remove('hidden');
+            });
+        });
+
+        // Hide the spinner when the page is fully loaded
+        window.addEventListener('load', function () {
+            document.getElementById('spinner-overlay').classList.add('hidden');
+        });
+
+        // Show the spinner during unload (when navigating to a new page)
+        window.addEventListener("beforeunload", function () {
+            document.getElementById('spinner-overlay').classList.remove('hidden');
+        });
+    </script>
 </body>
-<script>
-    // Show the spinner when the page starts loading
-    document.addEventListener("DOMContentLoaded", function () {
-        const spinnerOverlay = document.getElementById("spinner-overlay");
-        spinnerOverlay.classList.add("hidden"); // Hide spinner when page content is loaded
-    });
-    window.addEventListener('load', function() {
-    // Show spinner on page load
-    document.getElementById('spinner-overlay').style.display = 'flex';
-    
-    // Set timeout to hide spinner after 2 seconds
-    setTimeout(function() {
-        document.getElementById('spinner-overlay').style.display = 'none';
-    }, 2000); // 2000ms = 2 seconds
-
-    // Show the spinner when navigating to a new page
-    window.addEventListener("beforeunload", function () {
-        const spinnerOverlay = document.getElementById("spinner-overlay");
-        spinnerOverlay.classList.remove("hidden"); // Show spinner during unload
-    });
-    
-});
-
-</script>
-
 
 </html>
