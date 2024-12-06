@@ -306,6 +306,27 @@
 .nearby-card:hover{
     text-decoration: none;
 }
+#back-button {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1100;
+    background-color: #f7f7f7;
+    color: #333;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+#back-button:hover {
+    background-color: #e2e2e2;
+    transform: translateY(-2px);
+}
+
     </style>
 </head>
 <body>
@@ -314,7 +335,6 @@
 <button id="toggle-sidebar" aria-label="Toggle Sidebar">
     &#9776; <!-- Hamburger Icon -->
 </button>
-
 
     <!-- Sidebar -->
     <div id="sidebar">
@@ -327,6 +347,7 @@
 
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
     <script>
+
         mapboxgl.accessToken = "<%= process.env.MAP_API_KEY %>";
 
         var map = new mapboxgl.Map({

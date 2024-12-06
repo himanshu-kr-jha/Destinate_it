@@ -96,6 +96,34 @@ crossorigin="anonymous"></script>
             flex: 1 1 calc(33.333% - 20px); /* Three cards per row on larger screens */
         }
     }
+    .like-btn {
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    /* font-size: 1.5rem; */
+                    /* color: red; */
+                    /* Default color */
+                    /* position: absolute; */
+                    /* bottom: 10px; */
+                    /* left: 10px; */
+                    /* right: 10px; */
+                    z-index: 10;
+                    /* Ensures it's above the content */
+                }
+
+                .like-btn i {
+                    transition: color 0.3s ease;
+                }
+                .fa-heart {
+                    font-size: 1.5 rem;
+  color: grey;
+  transition: color 0.3s;
+}
+
+.fa-heart.liked {
+    font-size: 1.5rem;
+  color: red;
+}
 </style>
 <script>
     const maptoken = "<%=process.env.MAP_API_KEY%>";
@@ -117,9 +145,23 @@ crossorigin="anonymous"></script>
                 </div>
                 <div class="card-body">
                     <p>
-                        <i class="fa fa-heart"></i> <%=list.likes.length%>
-                        <i class="fas fa-eye icon-eye"></i> <%= list.views %>
-                        <a href="#reviews"><i class="fas fa-comment icon-comment"></i><%= list.reviews.length %></a>
+                        <form action="/like/<%= list._id %>/liked" method="post">
+                            <button class="like-btn">
+                              <% if (currUser && list.likes && list.likes.includes(currUser._id)) { %>
+                                <i class="fa fa-heart liked"></i> <%if(list.likes.length>0){%>
+                                    <%=list.likes.length%>
+                                <%}else{%>
+        
+                                <%}%>
+                              <% } else { %>
+                                <i class="fa fa-heart"></i> <%if(list.likes.length>0){%>
+                                    <%=list.likes.length%>
+                                <%}else{%>
+        
+                                <%}%>
+                              <% } %>
+                            </button>
+                          </form>
                     </p>
                     
                     

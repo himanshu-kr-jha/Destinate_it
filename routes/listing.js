@@ -7,11 +7,11 @@ const { validateListing } = require("../middleware.js");
 const listingConroller = require("../controllers/listing.js");
 const multer = require("multer");
 const { storage } = require("../cloudConfig.js");
-const upload = multer({ storage })
+const upload = multer({ storage });
 router
     .post("/new",
         isLogged,
-        upload.single('listing[image]'),
+        upload.array('listing[images]', 5),
         validateListing,
         wrapAsync(listingConroller.postListing));
 

@@ -23,9 +23,53 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet" />
 </head>
+<style>
+    /* Overlay covering the entire page */
+    #spinner-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999; /* Ensure it is on top of other content */
+    }
+
+    /* Spinner styling */
+    .spinner {
+        border: 8px solid rgba(0, 0, 0, 0.1);
+        border-top: 8px solid #fe424d; /* Spinner's active color */
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+    }
+
+    /* Spinner animation */
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Hide spinner overlay initially */
+    #spinner-overlay.hidden {
+        display: none;
+    }
+</style>
 
 <body>
     <%- include("../includes/navbar.ejs") %>
+    <div id="spinner-overlay">
+        <div class="spinner"></div>
+    </div>
+    
         <% if (success || error) { %>
             <div class="container">
                 <%- include("../includes/flash.ejs") %>
@@ -42,5 +86,30 @@
         <script src="/js/script.js"></script>
         <script src="/js/map.js"></script>
 </body>
+<script>
+    // Show the spinner when the page starts loading
+    document.addEventListener("DOMContentLoaded", function () {
+        const spinnerOverlay = document.getElementById("spinner-overlay");
+        spinnerOverlay.classList.add("hidden"); // Hide spinner when page content is loaded
+    });
+    window.addEventListener('load', function() {
+    // Show spinner on page load
+    document.getElementById('spinner-overlay').style.display = 'flex';
+    
+    // Set timeout to hide spinner after 2 seconds
+    setTimeout(function() {
+        document.getElementById('spinner-overlay').style.display = 'none';
+    }, 2000); // 2000ms = 2 seconds
+
+    // Show the spinner when navigating to a new page
+    window.addEventListener("beforeunload", function () {
+        const spinnerOverlay = document.getElementById("spinner-overlay");
+        spinnerOverlay.classList.remove("hidden"); // Show spinner during unload
+    });
+    
+});
+
+</script>
+
 
 </html>

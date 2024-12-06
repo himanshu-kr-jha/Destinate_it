@@ -5,40 +5,52 @@ const User = require("../models/user.js");
 const mapToken = process.env.MAP_API_KEY;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 module.exports.postListing = async (req, res, next) => {
-    let url = req.file.path;
-    let filename = req.file.filename;
+    try {
+        // Handle multiple uploaded files
+        const images = req.files.map(file => ({
+            url: file.path,
+            filename: file.filename
+        }));
 
-    // Check if coordinates are provided
-    let coordinates = req.body.listing.coordinates;
-    if (coordinates) {
-        // Split the coordinates if they are in "lat, lng" format
-        let [lat, lng] = coordinates.split(',').map(coord => parseFloat(coord.trim()));
-        
-        // Ensure lat and lng are valid numbers
-        if (!isNaN(lat) && !isNaN(lng)) {
-            req.body.listing.geometry = { type: 'Point', coordinates: [lng, lat] };
+        // Check if coordinates are provided
+        const coordinates = req.body.listing.coordinates;
+        if (coordinates) {
+            // Split the coordinates if they are in "lat, lng" format
+            const [lat, lng] = coordinates.split(',').map(coord => parseFloat(coord.trim()));
+
+            // Ensure lat and lng are valid numbers
+            if (!isNaN(lat) && !isNaN(lng)) {
+                req.body.listing.geometry = { type: 'Point', coordinates: [lng, lat] };
+            } else {
+                req.flash("error", "Invalid coordinates format.");
+                return res.redirect("/listing/new");
+            }
         } else {
-            req.flash("error", "Invalid coordinates format.");
+            // Handle missing coordinates
+            req.flash("error", "Coordinates are required.");
             return res.redirect("/listing/new");
         }
-    } else {
-        // If no coordinates provided, you could add a fallback or handle accordingly
-        req.flash("error", "Coordinates are required.");
-        return res.redirect("/listing/new");
+
+        // Create a new listing object
+        const newList = new Listing({
+            ...req.body.listing,
+            images, // Assign the array of images
+            owner: req.user._id
+        });
+
+        // Save the listing
+        const savedListing = await newList.save();
+
+        // Set success flash message and redirect
+        req.flash("success", "New listing added.");
+        res.redirect("/listing");
+    } catch (err) {
+        console.error(err);
+        req.flash("error", "Something went wrong while adding the listing.");
+        res.redirect("/listing/new");
     }
-
-    // Create new listing
-    let newList = new Listing(req.body.listing);
-    newList.owner = req.user._id;
-    newList.image = { url, filename };
-
-    // Save the listing
-    let savedlisting = await newList.save();
-
-    // Set success flash message and redirect
-    req.flash("success", "New listing added");
-    res.redirect("/listing");
 };
+
 
 module.exports.getIndexListing = async (req, res) => {
     // let allListing = await Listing.find();

@@ -4,77 +4,86 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8976075450983493"
 crossorigin="anonymous"></script>
 <style>
-    /* Custom styles for smaller, fixed-size cards with rounded corners */
     .card {
-        width: 100%; /* Make cards full width */
-        max-width: 300px; /* Limit max width */
-        height: 350px;
+        max-width: 500px; /* Limit the width of the card */
         margin: 10px;
-        border-radius: 15px;
-        overflow: hidden;
+        border: none; /* Remove border for cleaner design */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    
-    .card img {
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-        height: 170px;
-        object-fit: cover;
-    }
-    
-    .card-body {
-        padding: 10px;
-    }
-    
-    .card-title {
-        font-size: 1.25rem;
-        font-weight: bold;
-    }
-    
-    .card-text {
-        font-size: 0.9rem;
+
+    .card-horizontal {
+        display: flex; /* Horizontal layout */
+        flex-direction: row;
+        align-items: center; /* Vertically center the content */
     }
 
-    .card-location {
+    .card img {
+        width: 100px; /* Square image */
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px; /* Rounded corners for image */
+        margin-right: 15px; /* Space between image and content */
+    }
+
+    .card-body {
+        padding: 0; /* Remove default padding for cleaner alignment */
+    }
+
+    .card-title {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #fe424d;
+    }
+
+    .card-text {
         font-size: 0.85rem;
-        color: #6c757d;
+        color: #000;
+        margin-bottom: 0;
     }
 
     .description-short {
-        max-height: 45px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        max-width: 300px; /* Adjust based on available space */
     }
 
     /* Responsive styling */
     @media (max-width: 576px) {
         .card {
-            width: 100%; /* Full width for mobile */
+            max-width: 100%; /* Full width for mobile */
+        }
+
+        .card img {
+            width: 80px; /* Smaller image on mobile */
+            height: 80px;
+        }
+
+        .description-short {
+            max-width: 200px; /* Adjust based on screen size */
         }
     }
 </style>
 
+
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Search Results for "<%= searchQuery %>"</h1>
-
         <% if (results.length > 0) { %>
             <div id="search-results" class="d-flex flex-wrap justify-content-center">
-                <% results.slice(0, 3).forEach(destination => { %> <!-- Initially show 3 results -->
+                <% results.slice(0, 4).forEach(destination => { %>
                     <a href="/listing/<%= destination._id %>" style="text-decoration: none;">
-                    <div class="card mb-3">        
-                        <img src="<%= destination.image.url %>" class="img-fluid" alt="<%= destination.title %>">
-                        <div class="card-body">
-                            <h5 class="card-title" style="color: #fe424d; font-size: medium;"><%= destination.title %></h5>
-                            <p class="card-text description-short" style="color: #000; font-size: medium;"><%= destination.description %></p>
-                            <p class="card-location">Location: <%= destination.location %>, <%= destination.country %></p>
+                        <div class="card card-horizontal">
+                            <img src="<%= destination.image.url %>" alt="<%= destination.title %>">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= destination.title %></h5>
+                                <p class="card-text description-short"><%= destination.description %></p>
+                            </div>
                         </div>
-                    </div>
                     </a>
                 <% }) %>
             </div>
-
+            
             <!-- Pagination Controls -->
             <div class="text-center">
                 <button id="prev-btn" class="btn" style="background-color: #fe424d; color: white; font-size: medium;" disabled>
@@ -92,49 +101,69 @@ crossorigin="anonymous"></script>
 
     <script>
         const results = <%- JSON.stringify(results) %>;
-        const resultsPerPage = 3;
-        let currentPage = 0;
+    let resultsPerPage = calculateResultsPerPage(); // Determine initial value based on screen size
+    let currentPage = 0;
 
-        function renderResults() {
-            const searchResultsContainer = document.getElementById('search-results');
-            searchResultsContainer.innerHTML = ''; // Clear previous results
+    // Function to determine results per page based on screen width
+    function calculateResultsPerPage() {
+        const screenWidth = window.innerWidth;
 
-            const startIndex = currentPage * resultsPerPage;
-            const endIndex = startIndex + resultsPerPage;
-            const paginatedResults = results.slice(startIndex, endIndex);
+        if (screenWidth < 400) {
+            return 3; // Show more results for very small screens
+        } else if (screenWidth < 576) {
+            return 6; // Fewer results for small screens
+        } else {
+            return 8; // Default for larger screens
+        }
+    }
 
-            paginatedResults.forEach(destination => {
-                const newCard = `
-                <a href="/listing/${destination._id}" style="text-decoration: none;">
-                <div class="card mb-3">
-                    <img src="${destination.image.url}" class="img-fluid" alt="${destination.title}">
+    // Recalculate results per page on window resize
+    window.addEventListener("resize", () => {
+        resultsPerPage = calculateResultsPerPage();
+        currentPage = 0; // Reset to the first page
+        renderResults(); // Re-render results
+    });
+
+    // Function to render results
+    function renderResults() {
+        const searchResultsContainer = document.getElementById("search-results");
+        searchResultsContainer.innerHTML = ""; // Clear previous results
+
+        const startIndex = currentPage * resultsPerPage;
+        const endIndex = startIndex + resultsPerPage;
+        const paginatedResults = results.slice(startIndex, endIndex);
+
+        paginatedResults.forEach(destination => {
+            const newCard = `
+            <a href="/listing/${destination._id}" style="text-decoration: none;">
+                <div class="card card-horizontal">
+                    <img src="${destination.image.url}" alt="${destination.title}">
                     <div class="card-body">
-                        <h5 class="card-title" style="color: #fe424d; font-size: medium;">${destination.title}</h5>
-                        <p class="card-text description-short" style="color: #000; font-size: medium;">${destination.description}</p>
-                        <p class="card-location">Location: ${destination.location}, ${destination.country}</p>
+                        <h5 class="card-title">${destination.title}</h5>
+                        <p class="card-text description-short">${destination.description}</p>
                     </div>
                 </div>
-                </a>`;
-                
-                searchResultsContainer.insertAdjacentHTML('beforeend', newCard);
-            });
-
-            // Disable buttons based on the current page
-            document.getElementById('prev-btn').disabled = currentPage === 0;
-            document.getElementById('next-btn').disabled = endIndex >= results.length;
-        }
-
-        document.getElementById('next-btn').addEventListener('click', function() {
-            currentPage++;
-            renderResults();
+            </a>`;
+            searchResultsContainer.insertAdjacentHTML("beforeend", newCard);
         });
 
-        document.getElementById('prev-btn').addEventListener('click', function() {
-            currentPage--;
-            renderResults();
-        });
+        // Disable buttons based on the current page
+        document.getElementById("prev-btn").disabled = currentPage === 0;
+        document.getElementById("next-btn").disabled = endIndex >= results.length;
+    }
 
-        // Initial render
+    // Pagination button functionality
+    document.getElementById("next-btn").addEventListener("click", function () {
+        currentPage++;
         renderResults();
+    });
+
+    document.getElementById("prev-btn").addEventListener("click", function () {
+        currentPage--;
+        renderResults();
+    });
+
+    // Initial render
+    renderResults();
     </script>
 </body>
