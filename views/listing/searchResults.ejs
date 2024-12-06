@@ -64,6 +64,8 @@ crossorigin="anonymous"></script>
             max-width: 200px; /* Adjust based on screen size */
         }
     }
+
+    
 </style>
 
 
@@ -109,7 +111,7 @@ crossorigin="anonymous"></script>
         const screenWidth = window.innerWidth;
 
         if (screenWidth < 400) {
-            return 3; // Show more results for very small screens
+            return 5; // Show more results for very small screens
         } else if (screenWidth < 576) {
             return 6; // Fewer results for small screens
         } else {
