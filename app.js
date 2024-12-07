@@ -110,6 +110,7 @@ app.use('/', searchRouter);
 app.use('/map',mapRouter);
 
 app.all("*", (req, res, next) => {
+    console.log(req);
     next(new ExpressError("Page not found!!", 404));
 });
 

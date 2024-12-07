@@ -87,8 +87,7 @@
     <script src="/js/map.js"></script>
 
     <script>
-        // Show the spinner when a link is clicked
-        document.querySelectorAll('a').forEach(function (link) {
+                document.querySelectorAll('a').forEach(function (link) {
             link.addEventListener('click', function () {
                 document.getElementById('spinner-overlay').classList.remove('hidden');
             });
@@ -103,6 +102,15 @@
         window.addEventListener("beforeunload", function () {
             document.getElementById('spinner-overlay').classList.remove('hidden');
         });
+
+        // Prevent spinner when navigating back using the browser history
+        window.addEventListener("pageshow", function (event) {
+            if (event.persisted) {
+                // Hide spinner since the page was loaded from the cache
+                document.getElementById('spinner-overlay').classList.add('hidden');
+            }
+        });
+
     </script>
 </body>
 
