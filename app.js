@@ -16,6 +16,8 @@ const flash=require("connect-flash");
 const passport=require("passport");
 const localStrat=require("passport-local");
 const User=require("./models/user.js");
+const expressWaf = require('express-waf').default; // Some versions may export as default
+
 
 // routes
 const ListingsRouter=require("./routes/listing.js");
@@ -44,10 +46,12 @@ const sessionOptions={
     secret:process.env.SECRET,
     resave:false,
     saveUninialized:true,
-    cookie:{
-        expires:Date.now()+7*24*60*60*1000,
-        maxAge:7*24*60*60*1000,
-        httpOnly:true,
+    cookie: {
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Explicitly set the expiration as a Date object
+        maxAge: 7 * 24 * 60 * 60 * 1000, // Session lifespan in milliseconds
+        httpOnly: true, // Prevents JavaScript from accessing the cookie
+        secure: process.env.NODE_ENV === 'production', // Ensures cookies are sent over HTTPS in production
+        sameSite: 'Strict', // Prevents cross-site request forgery
     },
 };
 app.use(cors());
@@ -64,6 +68,16 @@ main().catch(err => console.log(err));
 async function main() {
     await mongoose.connect(dburl);
 }
+const helmet = require('helmet');
+
+app.use(helmet.hsts({
+    maxAge: 31536000, // 1 year in seconds
+    includeSubDomains: true,
+    preload: true
+}));
+app.use(helmet.frameguard({ action: 'sameorigin' }));
+app.use(helmet.noSniff());
+  
 
 app.get("/", (req, res) => {
     res.render("listing/home.ejs");
@@ -103,7 +117,11 @@ app.get("/privacy",(req,res)=>{
 })
 app.get("/terms",(req,res)=>{
     res.render("listing/terms.ejs");
-})
+});
+app.get("/cookie-policy",(req,res)=>{
+    res.render("listing/cookie.ejs");
+});
+
 //search
 
 app.use('/', searchRouter);
