@@ -36,3 +36,28 @@ module.exports.logout=(req,res)=>{
         res.redirect("/listing");
     })
 }
+
+module.exports.profile = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        // Validate the id parameter
+        // if (!mongoose.Types.ObjectId.isValid(id)) {
+        //     return res.status(400).send('Invalid User ID');
+        // }
+
+        // Find the user by ID
+        const user = await User.findById(id).populate('likes');
+        console.log(user);
+        // Handle case where user is not found
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Render the profile page with the user data
+        res.render("../views/users/profile.ejs", { user });
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
