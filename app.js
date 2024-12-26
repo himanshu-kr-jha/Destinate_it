@@ -2,13 +2,14 @@ if(process.env.NODE_ENV!="production"){
     require('dotenv').config()
 }
 const express = require("express");
+const metrics = require('express-metrics');
 const app = express();
-const cors = require('cors');
+const morgan = require('morgan');
 const mongoose = require('mongoose');
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const wrapAsync = require("./utils/wrapAsync.js");
+// const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const session=require("express-session");
 const MongoStore = require('connect-mongo');
@@ -16,7 +17,8 @@ const flash=require("connect-flash");
 const passport=require("passport");
 const localStrat=require("passport-local");
 const User=require("./models/user.js");
-const expressWaf = require('express-waf').default; // Some versions may export as default
+const Visit=require("./models/visit.js");
+// const expressWaf = require('express-waf').default; // Some versions may export as default
 
 
 // routes
@@ -51,33 +53,75 @@ const sessionOptions={
         maxAge: 7 * 24 * 60 * 60 * 1000, // Session lifespan in milliseconds
         httpOnly: true, // Prevents JavaScript from accessing the cookie
         secure: process.env.NODE_ENV === 'production', // Ensures cookies are sent over HTTPS in production
-        sameSite: 'Strict', // Prevents cross-site request forgery
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
     },
 };
-app.use(cors());
+// app.use(cors());
+app.use(metrics({
+    urlPattern: '*', // Track all routes
+    durationField: 'duration', // Track response duration
+    port: 8125,
+}));
+app.use(morgan('dev')); // Predefined format 'combined'
 app.use(methodOverride("_method"));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "/public")));
-app.use(express.static(path.join(__dirname, "/public/js")));
+app.use('/css', express.static(path.join(__dirname, 'css'), {
+    maxAge: '1d', // Cache static files for 1 day
+}));
+app.use('/js', express.static(path.join(__dirname, 'js'), {
+    maxAge: '1d', // Cache static files for 1 day
+}));
+app.use(express.static(path.join(__dirname, 'public'), {
+    maxAge: '1d', // Cache for 1 day
+}));
 app.engine("ejs", ejsMate);
+app.use((req, res, next) => {
+    if (req.url.match(/\.(css|js|png|jpg|jpeg|gif)$/)) {
+        res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache for 1 day
+    }
+    next();
+});
 
 main().catch(err => console.log(err));
 async function main() {
     await mongoose.connect(dburl);
 }
-const helmet = require('helmet');
+// const helmet = require('helmet');
 
-app.use(helmet.hsts({
-    maxAge: 31536000, // 1 year in seconds
-    includeSubDomains: true,
-    preload: true
-}));
-app.use(helmet.frameguard({ action: 'sameorigin' }));
-app.use(helmet.noSniff());
+// app.use(helmet.hsts({
+//     maxAge: 31536000, // 1 year in seconds
+//     includeSubDomains: true,
+//     preload: true
+// }));
+// app.use(helmet.frameguard({ action: 'sameorigin' }));
+// app.use(helmet.noSniff());
   
+app.use(async (req, res, next) => {
+    const start = Date.now();
+
+    // Call next middleware
+    res.on('finish', async () => {
+        const duration = Date.now() - start;
+
+        const visit = new Visit({
+            url: req.originalUrl,
+            method: req.method,
+            duration: duration,
+        });
+
+        try {
+            await visit.save(); // Save visit to MongoDB
+            console.log(`Logged visit: ${req.method} ${req.originalUrl} - ${duration}ms`);
+        } catch (err) {
+            console.error('Failed to log visit:', err);
+        }
+    });
+
+    next();
+});
 
 app.get("/", (req, res) => {
     res.render("listing/home.ejs");
