@@ -24,6 +24,7 @@ router.post("/login",
 }),
     wrapAsync(userConroller.login));
 
+router.get("/profile/:id",userConroller.profile);
 router.get("/logout",userConroller.logout);
 
 module.exports = router;

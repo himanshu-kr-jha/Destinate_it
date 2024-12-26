@@ -1,0 +1,149 @@
+<% layout("./layouts/boilerplate") %>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .profile-header {
+            background-color: #fe424d;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            border-radius: 0 0 25px 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-header img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 5px solid white;
+            margin-bottom: 1rem;
+        }
+
+        .profile-header h1 {
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .profile-header p {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #fe424d;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .saved-place-card img {
+            border-radius: 15px 15px 0 0;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .btn-edit {
+            background-color: #fe424d;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background-color: #ff6f73;
+        }
+
+        /* .container {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        } */
+
+        .btn-settings {
+            border-radius: 50px;
+            background-color: #fe424d;
+            color: white;
+        }
+
+        .btn-settings:hover {
+            background-color: #ff6f73;
+        }
+        #passwordError {
+  font-size: 0.9em;
+  margin-top: -10px;
+}
+.modal-content {
+  border-radius: 10px;
+}
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+    </style>
+
+<body>
+    <% 
+  // Create an array of image links
+  const imageLinks = [
+    "https://plus.unsplash.com/premium_vector-1727955579176-073f1c85dcda?q=80&w=1760&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://plus.unsplash.com/premium_vector-1719858610096-bba4498e5fc1?q=80&w=1760&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://plus.unsplash.com/premium_vector-1719858611039-66c134efa74d?q=80&w=1760&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://plus.unsplash.com/premium_vector-1727955579795-b528ed3d1478?q=80&w=1760&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://plus.unsplash.com/premium_vector-1727955579185-ed12a1c678de?q=80&w=1760&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  ];
+
+  // Randomly select an image link from the array
+  const randomImage = imageLinks[Math.floor(Math.random() * imageLinks.length)];
+%>
+
+<!-- Display the randomly selected image -->
+
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <img src="<%= randomImage %>" alt="Random Image" class="img-fluid">
+        <h1><%= user.username || "No name" %></h1>
+        <p><%= user.email %></p>
+        <button class="btn btn-edit"><i class="fas fa-edit"></i> Edit Profile</button>
+    </div>
+
+    <!-- Profile Content -->
+    <div class="container">
+        <!-- Saved Places Section -->
+        <div class="row">
+            <div class="col-12">
+                <br>
+                <h2 class="section-title">Saved Places</h2>
+            </div>
+            <% user.likes.forEach(likedPlace => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card saved-place-card">
+                        <img src="<%= likedPlace.image.url %>" alt="<%= likedPlace.title %> Image" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= likedPlace.title %></h5>
+                            <!-- <p class="card-text text-muted"><%= likedPlace.location %></p> -->
+                            <a href="/listing/<%= likedPlace._id %>" class="btn btn-settings">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+
+        <!-- Account Settings -->
+        
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
