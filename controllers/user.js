@@ -48,7 +48,6 @@ module.exports.profile = async (req, res) => {
 
         // Find the user by ID
         const user = await User.findById(id).populate('likes');
-        console.log(user);
         // Handle case where user is not found
         if (!user) {
             return res.status(404).send('User not found');
