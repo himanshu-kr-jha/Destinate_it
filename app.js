@@ -45,7 +45,7 @@ const sessionOptions={
     store,
     secret:process.env.SECRET,
     resave:false,
-    saveUninialized:true,
+    saveUninitialized:true,
     cookie: {
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Explicitly set the expiration as a Date object
         maxAge: 7 * 24 * 60 * 60 * 1000, // Session lifespan in milliseconds
@@ -83,7 +83,7 @@ app.get("/", (req, res) => {
     res.render("listing/home.ejs");
 });
 
-app.use(session(sessionOptions));
+app.use(session(sessionOptions),);
 app.use(flash());
 
 app.use(passport.initialize());
