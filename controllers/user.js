@@ -23,6 +23,7 @@ module.exports.signupPost=async (req, res) => {
 
 module.exports.login=async (req, res) => {
     req.flash("success","Welcome back to Destinate !t");
+    console.log("logged in");
     let redirecturl=res.locals.redirectUrl || "/listing";
     res.redirect(redirecturl);
 }
