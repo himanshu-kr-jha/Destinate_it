@@ -2,14 +2,15 @@ if(process.env.NODE_ENV!="production"){
     require('dotenv').config()
 }
 const express = require("express");
-const metrics = require('express-metrics');
 const app = express();
-const morgan = require('morgan');
+const metrics = require('express-metrics');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require("path");
+const morgan = require('morgan');
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-// const wrapAsync = require("./utils/wrapAsync.js");
+const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const session=require("express-session");
 const MongoStore = require('connect-mongo');
@@ -18,9 +19,6 @@ const passport=require("passport");
 const localStrat=require("passport-local");
 const User=require("./models/user.js");
 const Visit=require("./models/visit.js");
-// const expressWaf = require('express-waf').default; // Some versions may export as default
-
-
 // routes
 const ListingsRouter=require("./routes/listing.js");
 const ReviewsRouter=require("./routes/reviews.js");
@@ -47,27 +45,28 @@ const sessionOptions={
     store,
     secret:process.env.SECRET,
     resave:false,
-    saveUninitialized:true,
-    cookie: {
-        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Explicitly set the expiration as a Date object
-        maxAge: 7 * 24 * 60 * 60 * 1000, // Session lifespan in milliseconds
-        httpOnly: true, // Prevents JavaScript from accessing the cookie
-        secure: process.env.NODE_ENV === 'production', // Ensures cookies are sent over HTTPS in production
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
+    saveUninialized:true,
+    cookie:{
+        expires:Date.now()+7*24*60*60*1000,
+        maxAge:7*24*60*60*1000,
+        httpOnly:true,
     },
 };
-// app.use(cors());
+
 app.use(metrics({
     urlPattern: '*', // Track all routes
     durationField: 'duration', // Track response duration
-    port: 8125,
+    port: 8001,
 }));
 app.use(morgan('dev')); // Predefined format 'combined'
+app.use(cors());
 app.use(methodOverride("_method"));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "/public")));
+app.use(express.static(path.join(__dirname, "/public/js")));
 app.use('/css', express.static(path.join(__dirname, 'css'), {
     maxAge: '1d', // Cache static files for 1 day
 }));
@@ -89,16 +88,6 @@ main().catch(err => console.log(err));
 async function main() {
     await mongoose.connect(dburl);
 }
-// const helmet = require('helmet');
-
-// app.use(helmet.hsts({
-//     maxAge: 31536000, // 1 year in seconds
-//     includeSubDomains: true,
-//     preload: true
-// }));
-// app.use(helmet.frameguard({ action: 'sameorigin' }));
-// app.use(helmet.noSniff());
-  
 app.use(async (req, res, next) => {
     const start = Date.now();
 
@@ -127,7 +116,7 @@ app.get("/", (req, res) => {
     res.render("listing/home.ejs");
 });
 
-app.use(session(sessionOptions),);
+app.use(session(sessionOptions));
 app.use(flash());
 
 app.use(passport.initialize());
@@ -161,18 +150,14 @@ app.get("/privacy",(req,res)=>{
 })
 app.get("/terms",(req,res)=>{
     res.render("listing/terms.ejs");
-});
-app.get("/cookie-policy",(req,res)=>{
-    res.render("listing/cookie.ejs");
-});
-
+})
 //search
 
 app.use('/', searchRouter);
 app.use('/map',mapRouter);
 
 app.all("*", (req, res, next) => {
-    // console.log(req);
+    console.log(req);
     next(new ExpressError("Page not found!!", 404));
 });
 
