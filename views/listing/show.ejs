@@ -167,6 +167,14 @@
 .show-img.zoom-in {
     transform: scale(1);
 }
+.profile-pic {
+        width: 30px; /* Adjust size as needed */
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 8px;
+        border: 2px solid #fe424d; /* Optional: Border for styling */
+    }
 
 </style>
 <script>
@@ -228,7 +236,12 @@
                     </p>
                     
                     
-                    <p class="card-text"><strong>Credits</strong> <i>@<%= list.owner.username %><i></p>
+                    <p class="card-text">
+                        <a href="/user/profile/<%= list.owner._id %>" style="display: flex; align-items: center; text-decoration: none; color: #fe424d;">
+                            <img src="<%= list.owner.profilePic || 'https://plus.unsplash.com/premium_vector-1719858610096-bba4498e5fc1?q=80&w=1760&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' %>" alt="Profile Picture" class="profile-pic">
+                            <span>@<%= list.owner.username %></span>
+                        </a>
+                    </p>
                     <p class="card-text"><%= list.description %> <br><br></p>
                     <p class="card-text"><b><span style="color: #222222;">&#8377; <%= list.price.toLocaleString("en-IN") %></span></b><br></p>
                     <p class="card-text"><%= list.location %>, <%= list.country %><br></p>

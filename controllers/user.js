@@ -1,4 +1,5 @@
 const User = require("../models/user.js");
+const Listing =require("../models/listing.js");
 module.exports.sigup=(req, res) => {
     res.render("../views/users/signup.ejs");
 }
@@ -49,13 +50,15 @@ module.exports.profile = async (req, res) => {
 
         // Find the user by ID
         const user = await User.findById(id).populate('likes');
+        const listing =await Listing.find({owner:id});
+        console.log(user._id);
         // Handle case where user is not found
         if (!user) {
             return res.status(404).send('User not found');
         }
 
         // Render the profile page with the user data
-        res.render("../views/users/profile.ejs", { user });
+        res.render("../views/users/profile.ejs", { user,listing });
     } catch (error) {
         console.error('Error fetching user profile:', error);
         res.status(500).send('Internal Server Error');
