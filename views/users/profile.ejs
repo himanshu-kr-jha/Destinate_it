@@ -51,7 +51,8 @@
             transform: translateY(-5px);
         }
 
-        .saved-place-card img {
+        .saved-place-card img,
+        .contribution-card img {
             border-radius: 15px 15px 0 0;
             height: 200px;
             object-fit: cover;
@@ -66,11 +67,6 @@
             background-color: #ff6f73;
         }
 
-        /* .container {
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-        } */
-
         .btn-settings {
             border-radius: 50px;
             background-color: #fe424d;
@@ -80,23 +76,71 @@
         .btn-settings:hover {
             background-color: #ff6f73;
         }
-        #passwordError {
-  font-size: 0.9em;
-  margin-top: -10px;
-}
-.modal-content {
-  border-radius: 10px;
-}
-.btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
-}
 
+        #passwordError {
+            font-size: 0.9em;
+            margin-top: -10px;
+        }
+
+        .modal-content {
+            border-radius: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .saved-places-container,
+    .contributions-container {
+        display: flex;
+        overflow-x: auto;
+        gap: 15px;
+        padding-bottom: 15px;
+    }
+
+    .saved-place-card,
+    .contribution-card {
+        flex: 0 0 auto; /* Prevent the cards from shrinking or growing */
+        width: 250px; /* Adjust width as needed */
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+
+    .saved-place-card img,
+    .contribution-card img {
+        border-radius: 15px 15px 0 0;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .saved-place-card:hover,
+    .contribution-card:hover {
+        transform: translateY(-5px);
+    }
+
+    /* Add scrollbar styling */
+    .saved-places-container::-webkit-scrollbar,
+    .contributions-container::-webkit-scrollbar {
+        height: 10px;
+    }
+
+    .saved-places-container::-webkit-scrollbar-thumb,
+    .contributions-container::-webkit-scrollbar-thumb {
+        background: #fe424d;
+        border-radius: 4px;
+    }
+
+    .saved-places-container::-webkit-scrollbar-track,
+    .contributions-container::-webkit-scrollbar-track {
+        background: #f8f9fa;
+    }
     </style>
 
 <body>
     <% 
-  // Create an array of image links
   const imageLinks = [
     "https://plus.unsplash.com/premium_vector-1727955579176-073f1c85dcda?q=80&w=1760&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "https://plus.unsplash.com/premium_vector-1719858610096-bba4498e5fc1?q=80&w=1760&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -105,45 +149,60 @@
     "https://plus.unsplash.com/premium_vector-1727955579185-ed12a1c678de?q=80&w=1760&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   ];
 
-  // Randomly select an image link from the array
   const randomImage = imageLinks[Math.floor(Math.random() * imageLinks.length)];
 %>
 
-<!-- Display the randomly selected image -->
-
-
-    <!-- Profile Header -->
     <div class="profile-header">
         <img src="<%= randomImage %>" alt="Random Image" class="img-fluid">
         <h1><%= user.username || "No name" %></h1>
-        <p><%= user.email %></p>
-        <button class="btn btn-edit"><i class="fas fa-edit"></i> Edit Profile</button>
-    </div>
 
-    <!-- Profile Content -->
+        <p><%= user.email %></p>
+        <% if (currUser && currUser._id.toString() === user._id.toString()) { %>
+            <button class="btn btn-edit"><i class="fas fa-edit"></i> Edit Profile</button>
+        <% } %>
+    </div>
     <div class="container">
         <!-- Saved Places Section -->
+        <% if (currUser && currUser._id.toString() === user._id.toString()) { %>
+            <div class="row">
+                <div class="col-12">
+                    <br>
+                    <h2 class="section-title">Saved Places</h2>
+                </div>
+                <div class="saved-places-container">
+                    <% user.likes.forEach(likedPlace => { %>
+                        <div class="card saved-place-card">
+                            <img src="<%= likedPlace.image.url %>" alt="<%= likedPlace.title %> Image" class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= likedPlace.title %></h5>
+                                <a href="/listing/<%= likedPlace._id %>" class="btn btn-settings">View Details</a>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        <% } %>
+
+        <!-- Contribution Section -->
         <div class="row">
             <div class="col-12">
                 <br>
-                <h2 class="section-title">Saved Places</h2>
+                <h2 class="section-title">Contributions</h2>
             </div>
-            <% user.likes.forEach(likedPlace => { %>
-                <div class="col-md-4 mb-4">
-                    <div class="card saved-place-card">
-                        <img src="<%= likedPlace.image.url %>" alt="<%= likedPlace.title %> Image" class="card-img-top">
+            <div class="contributions-container">
+                <% listing.forEach(contribution => { %>
+                    <div class="card contribution-card">
+                        <img src="<%= contribution.image.url %>" alt="<%= contribution.title %> Image" class="card-img-top">
                         <div class="card-body">
-                            <h5 class="card-title"><%= likedPlace.title %></h5>
-                            <!-- <p class="card-text text-muted"><%= likedPlace.location %></p> -->
-                            <a href="/listing/<%= likedPlace._id %>" class="btn btn-settings">View Details</a>
+                            <h5 class="card-title"><%= contribution.title %></h5>
+                            <a href="/listing/<%= contribution._id %>" class="btn btn-settings">View Details</a>
                         </div>
                     </div>
-                </div>
-            <% }); %>
-
-        <!-- Account Settings -->
-        
+                <% }); %>
+            </div>
+        </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
